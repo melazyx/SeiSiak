@@ -21,7 +21,13 @@ const CATEGORY_GROUPS = {
       title: "Susu & Pupuk",
       description: "Produk susu segar dan pupuk kandang kambing.",
     },
+    {
+      key: "kambingQurban",
+      title: "Qurban & Aqiqah",
+      description: "Kambing siap qurban dan aqiqah, cukup umur & sehat.",
+    },
   ],
+  
   ayam: [
     {
       key: "ayamJual",
