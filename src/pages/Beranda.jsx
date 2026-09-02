@@ -15,7 +15,7 @@ import pertaminaLogo from "../assets/pertamina-logo.png";
 import heroImage from "../assets/hero-kambing.jpeg";
 import pertaminaBackground from "../assets/fuel-terminal.jpeg";
 
-const WA_NUMBER = "6281234567890";
+const WA_NUMBER = "6281270958582";
 
 const categories = [
   {

@@ -1,145 +1,114 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { initialProduk } from "../api/mockData";
+import { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 const ProdukContext = createContext(null);
 
-const STORAGE_KEY = "jk_produk";
+const SECTIONS = [
+  "kambingSusuPupuk",
+  "kambingQurban",
+  "ayamJual",
+  "ayamPupuk",
+  "maggotProduk",
+];
 
-function loadInitial() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+function groupBySection(rows) {
+  const grouped = {};
+  SECTIONS.forEach((s) => (grouped[s] = []));
 
-    if (saved) {
-      return JSON.parse(saved);
-    }
+  rows.forEach((row) => {
+    if (!grouped[row.section]) grouped[row.section] = [];
+    grouped[row.section].push({
+      id: row.id,
+      nama: row.nama,
+      harga: row.harga,
+      deskripsi: row.deskripsi,
+      image: row.image_url || "",
+    });
+  });
 
-    return initialProduk;
-  } catch (error) {
-    console.error("Gagal membaca data produk:", error);
-    return initialProduk;
-  }
+  return grouped;
 }
 
 export function ProdukProvider({ children }) {
-  const [data, setData] = useState(loadInitial);
+  const [data, setData] = useState(() => {
+    const empty = {};
+    SECTIONS.forEach((s) => (empty[s] = []));
+    return empty;
+  });
+  const [loading, setLoading] = useState(true);
 
-  // Sinkronkan data kalau ada tab lain yang mengubah localStorage
-  useEffect(() => {
-    function handleStorageChange(e) {
-      if (e.key === STORAGE_KEY && e.newValue) {
-        try {
-          setData(JSON.parse(e.newValue));
-        } catch (error) {
-          console.error("Gagal sinkronisasi data produk:", error);
-        }
-      }
+  async function fetchProduk() {
+    setLoading(true);
+
+    const { data: rows, error } = await supabase
+      .from("produk")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("Gagal ambil data produk:", error.message);
+      setLoading(false);
+      return;
     }
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    setData(groupBySection(rows));
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchProduk();
   }, []);
 
-  function persist(nextData) {
-    setData(nextData);
+  async function addProduk(section, fields) {
+    const { error } = await supabase.from("produk").insert({
+      section,
+      nama: fields.nama,
+      harga: fields.harga,
+      deskripsi: fields.deskripsi,
+      image_url: fields.image || null,
+    });
 
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(nextData)
-      );
-    } catch (error) {
-      console.error(
-        "Gagal menyimpan data produk:",
-        error
-      );
+    if (error) {
+      alert("Gagal menyimpan produk: " + error.message);
+      return;
     }
+
+    await fetchProduk();
   }
 
-  // =========================
-  // TAMBAH PRODUK
-  // =========================
+  async function editProduk(section, id, fields) {
+    const { error } = await supabase
+      .from("produk")
+      .update({
+        nama: fields.nama,
+        harga: fields.harga,
+        deskripsi: fields.deskripsi,
+        image_url: fields.image || null,
+      })
+      .eq("id", id);
 
-  function addProduk(section, fields) {
-    const items = data[section] || [];
+    if (error) {
+      alert("Gagal mengubah produk: " + error.message);
+      return;
+    }
 
-    const nextId =
-      items.length > 0
-        ? Math.max(...items.map((p) => Number(p.id) || 0)) + 1
-        : 1;
-
-    const newProduct = {
-      id: nextId,
-      ...fields,
-    };
-
-    const nextData = {
-      ...data,
-      [section]: [
-        ...items,
-        newProduct,
-      ],
-    };
-
-    persist(nextData);
+    await fetchProduk();
   }
 
-  // =========================
-  // EDIT PRODUK
-  // =========================
+  async function deleteProduk(section, id) {
+    const { error } = await supabase.from("produk").delete().eq("id", id);
 
-  function editProduk(section, id, fields) {
-    const items = data[section] || [];
+    if (error) {
+      alert("Gagal menghapus produk: " + error.message);
+      return;
+    }
 
-    const nextData = {
-      ...data,
-      [section]: items.map((product) =>
-        product.id === id
-          ? {
-            ...product,
-            ...fields,
-          }
-          : product
-      ),
-    };
-
-    persist(nextData);
-  }
-
-  // =========================
-  // HAPUS PRODUK
-  // =========================
-
-  function deleteProduk(section, id) {
-    const items = data[section] || [];
-
-    const nextData = {
-      ...data,
-      [section]: items.filter(
-        (product) => product.id !== id
-      ),
-    };
-
-    persist(nextData);
-  }
-
-  // =========================
-  // RESET DATA
-  // =========================
-
-  function resetProduk() {
-    localStorage.removeItem(STORAGE_KEY);
-    setData(initialProduk);
+    await fetchProduk();
   }
 
   return (
     <ProdukContext.Provider
-      value={{
-        data,
-        addProduk,
-        editProduk,
-        deleteProduk,
-        resetProduk,
-      }}
+      value={{ data, loading, addProduk, editProduk, deleteProduk }}
     >
       {children}
     </ProdukContext.Provider>

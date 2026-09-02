@@ -4,7 +4,9 @@ import {
   Upload,
   Image as ImageIcon,
   Trash2,
+  Loader2,
 } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
 
 export default function ProductModal({
   open,
@@ -18,6 +20,7 @@ export default function ProductModal({
     useState("");
 
   const [image, setImage] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const [saving, setSaving] =
     useState(false);
@@ -36,6 +39,8 @@ export default function ProductModal({
       setDeskripsi("");
       setImage("");
     }
+    setUploading(false);
+    setSaving(false);
   }, [initialData, open]);
 
   if (!open) return null;
@@ -45,35 +50,41 @@ export default function ProductModal({
   // UPLOAD GAMBAR
   // =========================
 
-  function handleImageChange(e) {
+  async function handleImageChange(e) {
     const file = e.target.files?.[0];
-
     if (!file) return;
 
-    // maksimal 2 MB
     if (file.size > 2 * 1024 * 1024) {
-      alert(
-        "Ukuran gambar maksimal 2 MB."
-      );
-
+      alert("Ukuran gambar maksimal 2 MB.");
       return;
     }
 
     if (!file.type.startsWith("image/")) {
-      alert(
-        "File harus berupa gambar."
-      );
-
+      alert("File harus berupa gambar.");
       return;
     }
 
-    const reader = new FileReader();
+    setUploading(true);
 
-    reader.onloadend = () => {
-      setImage(reader.result);
-    };
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
 
-    reader.readAsDataURL(file);
+    const { error: uploadError } = await supabase.storage
+      .from("produk-images")
+      .upload(fileName, file);
+
+    if (uploadError) {
+      alert("Gagal upload gambar: " + uploadError.message);
+      setUploading(false);
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("produk-images")
+      .getPublicUrl(fileName);
+
+    setImage(data.publicUrl);
+    setUploading(false);
   }
 
 
@@ -90,7 +101,7 @@ export default function ProductModal({
   // SAVE
   // =========================
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!nama.trim()) {
@@ -103,9 +114,14 @@ export default function ProductModal({
       return;
     }
 
+    if (uploading) {
+      alert("Tunggu sampai foto selesai diunggah dulu.");
+      return;
+    }
+
     setSaving(true);
 
-    onSave({
+    await onSave({
       nama: nama.trim(),
       harga: harga.trim(),
       deskripsi: deskripsi.trim(),
@@ -314,7 +330,7 @@ export default function ProductModal({
 
             ) : (
 
-              <label className="
+              <label className={`
                 block
                 cursor-pointer
                 border-2
@@ -323,39 +339,52 @@ export default function ProductModal({
                 rounded-xl
                 p-8
                 text-center
-                hover:border-primary
-                hover:bg-primary-light/30
                 transition-colors
-              ">
+                ${uploading
+                  ? "opacity-60 pointer-events-none"
+                  : "hover:border-primary hover:bg-primary-light/30"
+                }
+              `}>
 
                 <div className="w-12 h-12 mx-auto rounded-xl bg-primary-light flex items-center justify-center mb-3">
 
-                  <ImageIcon
-                    size={22}
-                    className="text-primary"
-                  />
+                  {uploading ? (
+                    <Loader2
+                      size={22}
+                      className="text-primary animate-spin"
+                    />
+                  ) : (
+                    <ImageIcon
+                      size={22}
+                      className="text-primary"
+                    />
+                  )}
 
                 </div>
 
                 <p className="text-sm font-semibold text-ink">
-                  Upload gambar produk
+                  {uploading ? "Mengunggah..." : "Upload gambar produk"}
                 </p>
 
-                <p className="text-xs text-muted mt-1">
-                  PNG, JPG, JPEG atau WEBP
-                </p>
+                {!uploading && (
+                  <>
+                    <p className="text-xs text-muted mt-1">
+                      PNG, JPG, JPEG atau WEBP
+                    </p>
 
-                <p className="text-xs text-muted">
-                  Maksimal 2 MB
-                </p>
+                    <p className="text-xs text-muted">
+                      Maksimal 2 MB
+                    </p>
 
-                <div className="inline-flex items-center gap-2 mt-4 bg-primary text-white px-4 py-2 rounded-lg text-xs font-semibold">
+                    <div className="inline-flex items-center gap-2 mt-4 bg-primary text-white px-4 py-2 rounded-lg text-xs font-semibold">
 
-                  <Upload size={14} />
+                      <Upload size={14} />
 
-                  Pilih Gambar
+                      Pilih Gambar
 
-                </div>
+                    </div>
+                  </>
+                )}
 
                 <input
                   type="file"
@@ -363,6 +392,7 @@ export default function ProductModal({
                   onChange={
                     handleImageChange
                   }
+                  disabled={uploading}
                   className="hidden"
                 />
 
@@ -398,7 +428,7 @@ export default function ProductModal({
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || uploading}
               className="
                 flex-1
                 px-4

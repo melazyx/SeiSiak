@@ -1,92 +1,68 @@
-import { createContext, useContext, useState } from "react";
-import { registerAdmin, loginAdmin } from "../api/auth";
+import { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 const AuthContext = createContext(null);
 
-const DEMO_USERS_KEY = "jk_demo_users";
-const TOKEN_KEY = "jk_token";
-const USER_KEY = "jk_user";
-
-// ===============================
-// AKUN ADMIN TETAP — buat demo/sidang
-// Ganti email & password sesuai keinginan kamu
-// ===============================
-const FIXED_ADMIN = {
-  nama: "Admin Juragan Kambing",
-  email: "admin@juragankambing.com",
-  password: "admin123",
-};
-
-function readDemoUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(DEMO_USERS_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(USER_KEY));
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  function persistSession(user, token) {
-    localStorage.setItem(TOKEN_KEY, token);
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
-    setUser(user);
-  }
+  useEffect(() => {
+    // Cek sesi yang mungkin masih tersimpan (misal user refresh halaman)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // Dengar perubahan status login (login/logout dari tab manapun)
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   async function register({ nama, email, password }) {
-    try {
-      const { user, token } = await registerAdmin({ nama, email, password });
-      persistSession(user, token);
-      return { ok: true };
-    } catch {
-      const users = readDemoUsers();
-      if (email === FIXED_ADMIN.email || users.some((u) => u.email === email)) {
-        return { ok: false, message: "Email sudah terdaftar." };
-      }
-      users.push({ nama, email, password });
-      localStorage.setItem(DEMO_USERS_KEY, JSON.stringify(users));
-      return { ok: true };
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { nama },
+      },
+    });
+
+    if (error) {
+      return { ok: false, message: error.message };
     }
+
+    return { ok: true };
   }
 
   async function login({ email, password }) {
-    // Cek akun tetap dulu — selalu tersedia di browser/device manapun
-    if (email === FIXED_ADMIN.email && password === FIXED_ADMIN.password) {
-      persistSession(
-        { nama: FIXED_ADMIN.nama, email: FIXED_ADMIN.email },
-        "demo-token-fixed"
-      );
-      return { ok: true };
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return { ok: false, message: "Email atau password salah." };
     }
 
-    try {
-      const { user, token } = await loginAdmin({ email, password });
-      persistSession(user, token);
-      return { ok: true };
-    } catch {
-      const users = readDemoUsers();
-      const found = users.find((u) => u.email === email && u.password === password);
-      if (!found) return { ok: false, message: "Email atau password salah." };
-      persistSession({ nama: found.nama, email: found.email }, "demo-token");
-      return { ok: true };
-    }
+    setUser(data.user);
+    return { ok: true };
   }
 
-  function logout() {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+  async function logout() {
+    await supabase.auth.signOut();
     setUser(null);
   }
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
