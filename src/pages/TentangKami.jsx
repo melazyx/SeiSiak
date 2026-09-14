@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CTABanner from "../components/CTABanner";
 import SectionHeading from "../components/SectionHeading";
-import ActivityCard from "../components/activityCard";
+import ActivityCard from "../components/ActivityCard";
 import ActivityDetailModal from "../components/ActivityDetailModal";
 import { useKegiatan } from "../context/KegiatanContext";
 import { useGaleri } from "../context/GaleriContext";
