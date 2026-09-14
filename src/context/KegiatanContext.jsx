@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { catatAktivitas } from "../utils/auditLog";
 
 const KegiatanContext = createContext(null);
 
