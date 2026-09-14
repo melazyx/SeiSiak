@@ -7,6 +7,12 @@ import {
   X,
   ChevronRight,
   UserCircle,
+  LineChart,
+  PawPrint,
+  Warehouse,
+  History,
+  Camera,
+  Images,
 } from "lucide-react";
 
 import { useState } from "react";
@@ -39,6 +45,18 @@ export default function AdminLayout({ children }) {
 
   }
 
+  const menuTernak = [
+    {
+      label: "Ternak Kambing",
+      path: "/admin/ternak/kambing",
+      icon: "🐐",
+    },
+    {
+      label: "Ternak Ayam",
+      path: "/admin/ternak/ayam",
+      icon: "🐔",
+    },
+  ];
 
   const menuProduk = [
     {
@@ -105,10 +123,9 @@ export default function AdminLayout({ children }) {
           transition-transform
           duration-300
 
-          ${
-            sidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full lg:translate-x-0"
+          ${sidebarOpen
+            ? "translate-x-0"
+            : "-translate-x-full lg:translate-x-0"
           }
         `}
       >
@@ -199,10 +216,9 @@ export default function AdminLayout({ children }) {
               font-semibold
               transition-all
 
-              ${
-                isActive
-                  ? "bg-white text-[#062A55] shadow-sm"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
+              ${isActive
+                ? "bg-white text-[#062A55] shadow-sm"
+                : "text-white/80 hover:bg-white/10 hover:text-white"
               }
             `}
           >
@@ -244,10 +260,9 @@ export default function AdminLayout({ children }) {
                     font-medium
                     transition-all
 
-                    ${
-                      isActive
-                        ? "bg-red-600 text-white shadow-sm"
-                        : "text-white/80 hover:bg-white/10 hover:text-white"
+                    ${isActive
+                      ? "bg-red-600 text-white shadow-sm"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
                     }
                   `}
                 >
@@ -273,6 +288,252 @@ export default function AdminLayout({ children }) {
 
           </div>
 
+          {/* TERNAK & KESEHATAN */}
+
+          <div className="mt-7">
+
+            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
+              Ternak & Kesehatan
+            </p>
+
+            <div className="space-y-1">
+
+              {menuTernak.map((item) => (
+
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setSidebarOpen(false)}
+                  className={({ isActive }) => `
+                    flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    rounded-xl
+                    text-sm
+                    font-medium
+                    transition-all
+
+                    ${isActive
+                      ? "bg-red-600 text-white shadow-sm"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                    }
+                  `}
+                >
+
+                  <span className="text-lg">
+                    {item.icon}
+                  </span>
+
+                  <span className="flex-1">
+                    {item.label}
+                  </span>
+
+                  <ChevronRight
+                    size={15}
+                    className="opacity-50"
+                  />
+
+                </NavLink>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* GUDANG PAKAN */}
+
+          <div className="mt-7">
+
+            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
+              Gudang
+            </p>
+
+            <NavLink
+              to="/admin/gudang-pakan"
+              onClick={() => setSidebarOpen(false)}
+              className={({ isActive }) => `
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-xl
+                text-sm
+                font-semibold
+                transition-all
+
+                ${isActive
+                  ? "bg-white text-[#062A55] shadow-sm"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
+                }
+              `}
+            >
+
+              <Warehouse size={19} />
+
+              <span>
+                Gudang Pakan
+              </span>
+
+            </NavLink>
+
+          </div>
+
+          {/* RIWAYAT AKTIVITAS */}
+
+          <div className="mt-7">
+
+            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
+              Audit
+            </p>
+
+            <NavLink
+              to="/admin/riwayat-aktivitas"
+              onClick={() => setSidebarOpen(false)}
+              className={({ isActive }) => `
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-xl
+                text-sm
+                font-semibold
+                transition-all
+
+                ${
+                  isActive
+                    ? "bg-white text-[#062A55] shadow-sm"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                }
+              `}
+            >
+
+              <History size={19} />
+
+              <span>
+                Riwayat Aktivitas
+              </span>
+
+            </NavLink>
+
+          </div>
+
+          {/* PRODUKSI & PENJUALAN */}
+
+          <div className="mt-7">
+
+            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
+              Laporan
+            </p>
+
+            <NavLink
+              to="/admin/produksi-penjualan"
+              onClick={() => setSidebarOpen(false)}
+              className={({ isActive }) => `
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-xl
+                text-sm
+                font-semibold
+                transition-all
+
+                ${isActive
+                  ? "bg-white text-[#062A55] shadow-sm"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
+                }
+              `}
+            >
+
+              <LineChart size={19} />
+
+              <span>
+                Produksi & Penjualan
+              </span>
+
+            </NavLink>
+
+          </div>
+
+          {/* KONTEN WEBSITE */}
+
+          <div className="mt-7">
+
+            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
+              Konten Website
+            </p>
+
+            <div className="space-y-1">
+
+              <NavLink
+                to="/admin/kegiatan"
+                onClick={() => setSidebarOpen(false)}
+                className={({ isActive }) => `
+                  flex
+                  items-center
+                  gap-3
+                  px-4
+                  py-3
+                  rounded-xl
+                  text-sm
+                  font-semibold
+                  transition-all
+
+                  ${
+                    isActive
+                      ? "bg-white text-[#062A55] shadow-sm"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }
+                `}
+              >
+
+                <Camera size={19} />
+
+                <span>
+                  Kelola Kegiatan
+                </span>
+
+              </NavLink>
+
+              <NavLink
+                to="/admin/galeri"
+                onClick={() => setSidebarOpen(false)}
+                className={({ isActive }) => `
+                  flex
+                  items-center
+                  gap-3
+                  px-4
+                  py-3
+                  rounded-xl
+                  text-sm
+                  font-semibold
+                  transition-all
+
+                  ${
+                    isActive
+                      ? "bg-white text-[#062A55] shadow-sm"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }
+                `}
+              >
+
+                <Images size={19} />
+
+                <span>
+                  Kelola Galeri
+                </span>
+
+              </NavLink>
+
+            </div>
+
+          </div>
 
           {/* WEBSITE */}
 

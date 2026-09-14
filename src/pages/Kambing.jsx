@@ -15,6 +15,7 @@ import susuKambingImage from "../assets/susu-kambing.jpeg";
 import pupukKambingImage from "../assets/pupuk-kambing.jpg";
 import kambingQurbanImage from "../assets/kambing-qurban.jpeg";
 import kambingPerahImage from "../assets/kambing-perah.jpeg";
+import { Link } from "react-router-dom";
 
 const TABS = [
   { id: "produk", label: "Susu & Pupuk" },
@@ -141,9 +142,15 @@ export default function Kambing() {
             </p>
             <div className="max-w-xs mx-auto">
               <WaButton full message="Halo, saya ingin tanya-tanya soal titip ternak kambing." />
-            </div>
-          </div>
-        )}
+            <Link
+        to="/lacak-ternak"
+        className="block text-sm font-semibold text-secondary-dark hover:underline"
+      >
+        Sudah titip ternak? Lacak perkembangannya di sini →
+      </Link>
+    </div>
+  </div>
+)}
 
         <CTABanner />
       </div>

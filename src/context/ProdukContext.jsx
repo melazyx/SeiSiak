@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { catatAktivitas } from "../utils/auditLog";
 
 const ProdukContext = createContext(null);
 
@@ -73,6 +74,8 @@ export function ProdukProvider({ children }) {
       return;
     }
 
+    catatAktivitas("tambah", "produk", `Menambah produk "${fields.nama}"`);
+
     await fetchProduk();
   }
 
@@ -92,6 +95,8 @@ export function ProdukProvider({ children }) {
       return;
     }
 
+    catatAktivitas("ubah", "produk", `Mengubah produk "${fields.nama}"`);
+
     await fetchProduk();
   }
 
@@ -102,6 +107,8 @@ export function ProdukProvider({ children }) {
       alert("Gagal menghapus produk: " + error.message);
       return;
     }
+
+    catatAktivitas("hapus", "produk", `Menghapus produk id ${id} di kategori ${section}`);
 
     await fetchProduk();
   }
