@@ -13,6 +13,7 @@ import {
   History,
   Camera,
   Images,
+  Tag,
 } from "lucide-react";
 
 import { useState } from "react";
@@ -55,6 +56,24 @@ export default function AdminLayout({ children }) {
       label: "Ternak Ayam",
       path: "/admin/ternak/ayam",
       icon: "🐔",
+    },
+  ];
+
+  const menuKategori = [
+    {
+      label: "Kategori Kambing",
+      path: "/admin/kategori/kambing",
+      icon: "🐐",
+    },
+    {
+      label: "Kategori Ayam",
+      path: "/admin/kategori/ayam",
+      icon: "🐔",
+    },
+    {
+      label: "Kategori Maggot",
+      path: "/admin/kategori/maggot",
+      icon: "🪱",
     },
   ];
 
@@ -288,6 +307,61 @@ export default function AdminLayout({ children }) {
 
           </div>
 
+          {/* KATEGORI */}
+
+          <div className="mt-7">
+
+            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
+              Pengaturan Tab
+            </p>
+
+            <div className="space-y-1">
+
+              {menuKategori.map((item) => (
+
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setSidebarOpen(false)}
+                  className={({ isActive }) => `
+                    flex
+                    items-center
+                    gap-3
+                    px-4
+                    py-3
+                    rounded-xl
+                    text-sm
+                    font-medium
+                    transition-all
+
+                    ${isActive
+                      ? "bg-red-600 text-white shadow-sm"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                    }
+                  `}
+                >
+
+                  <span className="text-lg">
+                    {item.icon}
+                  </span>
+
+                  <span className="flex-1">
+                    {item.label}
+                  </span>
+
+                  <ChevronRight
+                    size={15}
+                    className="opacity-50"
+                  />
+
+                </NavLink>
+
+              ))}
+
+            </div>
+
+          </div>
+
           {/* TERNAK & KESEHATAN */}
 
           <div className="mt-7">
@@ -404,10 +478,9 @@ export default function AdminLayout({ children }) {
                 font-semibold
                 transition-all
 
-                ${
-                  isActive
-                    ? "bg-white text-[#062A55] shadow-sm"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                ${isActive
+                  ? "bg-white text-[#062A55] shadow-sm"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
                 }
               `}
             >
@@ -485,10 +558,9 @@ export default function AdminLayout({ children }) {
                   font-semibold
                   transition-all
 
-                  ${
-                    isActive
-                      ? "bg-white text-[#062A55] shadow-sm"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  ${isActive
+                    ? "bg-white text-[#062A55] shadow-sm"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
                   }
                 `}
               >
@@ -515,10 +587,9 @@ export default function AdminLayout({ children }) {
                   font-semibold
                   transition-all
 
-                  ${
-                    isActive
-                      ? "bg-white text-[#062A55] shadow-sm"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  ${isActive
+                    ? "bg-white text-[#062A55] shadow-sm"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
                   }
                 `}
               >

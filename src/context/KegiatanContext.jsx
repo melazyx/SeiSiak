@@ -72,6 +72,8 @@ export function KegiatanProvider({ children }) {
       throw error;
     }
 
+    catatAktivitas("tambah", "kegiatan", `Menambah kegiatan "${fields.title}"`);
+
     await fetchKegiatan();
   }
 
@@ -94,6 +96,8 @@ export function KegiatanProvider({ children }) {
       throw error;
     }
 
+    catatAktivitas("ubah", "kegiatan", `Mengubah kegiatan id ${id}`);
+
     await fetchKegiatan();
   }
 
@@ -107,6 +111,8 @@ export function KegiatanProvider({ children }) {
       console.error("Gagal menghapus kegiatan:", error);
       throw error;
     }
+
+    catatAktivitas("hapus", "kegiatan", `Menghapus kegiatan id ${id}`);
 
     await fetchKegiatan();
   }
