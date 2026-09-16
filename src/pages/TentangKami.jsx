@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Leaf } from "lucide-react";
+import { Leaf, Expand } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CTABanner from "../components/CTABanner";
 import SectionHeading from "../components/SectionHeading";
 import ActivityCard from "../components/ActivityCard";
 import ActivityDetailModal from "../components/ActivityDetailModal";
+import GaleriLightbox from "../components/GaleriLightbox";
 import { useKegiatan } from "../context/KegiatanContext";
 import { useGaleri } from "../context/GaleriContext";
 
@@ -13,6 +14,7 @@ export default function TentangKami() {
   const { kegiatan, loading } = useKegiatan();
   const { galeri } = useGaleri();
   const [selected, setSelected] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   return (
     <div>
@@ -44,14 +46,30 @@ export default function TentangKami() {
           {galeri.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {galeri.map((item) => (
-                <div key={item.id} className="relative rounded-lg overflow-hidden aspect-square">
-                  <img src={item.image_url} alt={item.keterangan || "Galeri"} className="w-full h-full object-cover" />
+                <button
+                  key={item.id}
+                  onClick={() => setSelectedPhoto(item)}
+                  className="group relative rounded-xl overflow-hidden aspect-square border border-line shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <img
+                    src={item.image_url}
+                    alt={item.keterangan || "Galeri"}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+
+                  {/* overlay gradient supaya caption selalu kebaca, tanpa perlu hover */}
+                  <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Expand size={12} className="text-ink" />
+                  </div>
+
                   {item.keterangan && (
-                    <p className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[10px] px-1.5 py-1 truncate">
+                    <p className="absolute bottom-0 left-0 right-0 text-white text-[11px] font-medium px-2.5 py-2 text-left leading-snug line-clamp-2">
                       {item.keterangan}
                     </p>
                   )}
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -103,6 +121,8 @@ export default function TentangKami() {
         }
         onClose={() => setSelected(null)}
       />
+
+      <GaleriLightbox photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
     </div>
   );
 }

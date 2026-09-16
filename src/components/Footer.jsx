@@ -9,7 +9,7 @@ import {
 import pertaminaLogo from "../assets/pertamina-logo.png";
 import { ShieldCheck } from "lucide-react";
 
-const WA_NUMBER = "6281234567890";
+const WA_NUMBER = "6281270958582";
 
 const ADDRESS =
   "Fuel Terminal Sei Siak, Kota Pekanbaru, Riau";

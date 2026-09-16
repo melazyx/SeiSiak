@@ -1,3 +1,5 @@
+import CategorySwitcher from "./CategorySwitcher";
+
 export default function PageHero({
   category,
   titleBlue,
@@ -23,6 +25,9 @@ export default function PageHero({
           ========================== */}
           <div>
 
+            {/* Saklar cepat antar-kategori */}
+            <CategorySwitcher active={category} />
+
             {/* Badge */}
             {badgeText && (
               <div className="inline-flex items-center gap-2 bg-white border border-[#dce8f2] rounded-full px-4 py-2 shadow-sm mb-7">
@@ -42,13 +47,13 @@ export default function PageHero({
             <h1 className="font-heading font-extrabold leading-[0.95] tracking-tight text-5xl sm:text-6xl lg:text-7xl">
 
               {titleBlue && (
-                <span className="block text-[#0072bc]">
+                <span className="text-[#0072bc]">
                   {titleBlue}
                 </span>
               )}
 
               {titleRed && (
-                <span className="block text-[#ed1c24]">
+                <span className="text-[#ed1c24]">
                   {titleRed}
                 </span>
               )}

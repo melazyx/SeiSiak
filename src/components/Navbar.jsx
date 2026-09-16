@@ -64,7 +64,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between">
 
             {/* ================= BRAND ================= */}
-            <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-4">
 
               <img
                 src={pertaminaLogo}
@@ -75,22 +75,12 @@ export default function Navbar() {
               <div className="hidden sm:block w-px h-10 bg-line" />
 
               <div className="hidden sm:block leading-tight">
-
-                <p className="text-sm font-bold text-ink">
-                  JURAGAN KAMBING
-                </p>
-
-                <p className="text-xs font-semibold text-primary">
-                  SEI SIAK
-                </p>
-
-                <p className="text-[9px] text-muted uppercase tracking-wide">
-                  UMKM Binaan
-                </p>
-
+                <p className="text-sm font-bold text-ink">JURAGAN KAMBING</p>
+                <p className="text-xs font-semibold text-primary">SEI SIAK</p>
+                <p className="text-[9px] text-muted uppercase tracking-wide">UMKM Binaan</p>
               </div>
 
-            </div>
+            </Link>
 
 
             {/* ================= DESKTOP MENU ================= */}
@@ -107,10 +97,9 @@ export default function Navbar() {
                     text-sm
                     font-semibold
                     transition-colors
-                    ${
-                      isActive
-                        ? "text-primary"
-                        : "text-ink hover:text-primary"
+                    ${isActive
+                      ? "text-primary"
+                      : "text-ink hover:text-primary"
                     }
                     `
                   }
@@ -240,10 +229,9 @@ export default function Navbar() {
                       rounded-xl
                       text-sm
                       font-semibold
-                      ${
-                        isActive
-                          ? "bg-primary-light text-primary"
-                          : "text-ink hover:bg-cream"
+                      ${isActive
+                        ? "bg-primary-light text-primary"
+                        : "text-ink hover:bg-cream"
                       }
                       `
                     }
