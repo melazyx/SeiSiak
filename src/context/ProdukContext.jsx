@@ -14,15 +14,27 @@ const SECTIONS = [
 
 function groupBySection(rows) {
   const grouped = {};
-  SECTIONS.forEach((s) => (grouped[s] = []));
+
+  SECTIONS.forEach((s) => {
+    grouped[s] = [];
+  });
 
   rows.forEach((row) => {
-    if (!grouped[row.section]) grouped[row.section] = [];
+    if (!grouped[row.section]) {
+      grouped[row.section] = [];
+    }
+
     grouped[row.section].push({
       id: row.id,
       nama: row.nama,
       harga: row.harga,
       deskripsi: row.deskripsi,
+
+      // INFORMASI TAMBAHAN
+      bobot: row.bobot || "",
+      jenis_kelamin: row.jenis_kelamin || "",
+      umur: row.umur || "",
+
       image: row.image_url || "",
     });
   });
@@ -33,9 +45,14 @@ function groupBySection(rows) {
 export function ProdukProvider({ children }) {
   const [data, setData] = useState(() => {
     const empty = {};
-    SECTIONS.forEach((s) => (empty[s] = []));
+
+    SECTIONS.forEach((s) => {
+      empty[s] = [];
+    });
+
     return empty;
   });
+
   const [loading, setLoading] = useState(true);
 
   async function fetchProduk() {
@@ -47,7 +64,11 @@ export function ProdukProvider({ children }) {
       .order("created_at", { ascending: true });
 
     if (error) {
-      console.error("Gagal ambil data produk:", error.message);
+      console.error(
+        "Gagal ambil data produk:",
+        error.message
+      );
+
       setLoading(false);
       return;
     }
@@ -61,20 +82,36 @@ export function ProdukProvider({ children }) {
   }, []);
 
   async function addProduk(section, fields) {
-    const { error } = await supabase.from("produk").insert({
-      section,
-      nama: fields.nama,
-      harga: fields.harga,
-      deskripsi: fields.deskripsi,
-      image_url: fields.image || null,
-    });
+    const { error } = await supabase
+      .from("produk")
+      .insert({
+        section,
+
+        nama: fields.nama,
+        harga: fields.harga,
+        deskripsi: fields.deskripsi,
+
+        // INFORMASI TAMBAHAN
+        bobot: fields.bobot || null,
+        jenis_kelamin: fields.jenis_kelamin || null,
+        umur: fields.umur || null,
+
+        image_url: fields.image || null,
+      });
 
     if (error) {
-      alert("Gagal menyimpan produk: " + error.message);
+      alert(
+        "Gagal menyimpan produk: " +
+          error.message
+      );
       return;
     }
 
-    catatAktivitas("tambah", "produk", `Menambah produk "${fields.nama}"`);
+    catatAktivitas(
+      "tambah",
+      "produk",
+      `Menambah produk "${fields.nama}"`
+    );
 
     await fetchProduk();
   }
@@ -86,36 +123,66 @@ export function ProdukProvider({ children }) {
         nama: fields.nama,
         harga: fields.harga,
         deskripsi: fields.deskripsi,
+
+        // INFORMASI TAMBAHAN
+        bobot: fields.bobot || null,
+        jenis_kelamin:
+          fields.jenis_kelamin || null,
+        umur: fields.umur || null,
+
         image_url: fields.image || null,
       })
       .eq("id", id);
 
     if (error) {
-      alert("Gagal mengubah produk: " + error.message);
+      alert(
+        "Gagal mengubah produk: " +
+          error.message
+      );
       return;
     }
 
-    catatAktivitas("ubah", "produk", `Mengubah produk "${fields.nama}"`);
+    catatAktivitas(
+      "ubah",
+      "produk",
+      `Mengubah produk "${fields.nama}"`
+    );
 
     await fetchProduk();
   }
 
   async function deleteProduk(section, id) {
-    const { error } = await supabase.from("produk").delete().eq("id", id);
+    const { error } = await supabase
+      .from("produk")
+      .delete()
+      .eq("id", id);
 
     if (error) {
-      alert("Gagal menghapus produk: " + error.message);
+      alert(
+        "Gagal menghapus produk: " +
+          error.message
+      );
       return;
     }
 
-    catatAktivitas("hapus", "produk", `Menghapus produk id ${id} di kategori ${section}`);
+    catatAktivitas(
+      "hapus",
+      "produk",
+      `Menghapus produk id ${id} di kategori ${section}`
+    );
 
     await fetchProduk();
   }
 
   return (
     <ProdukContext.Provider
-      value={{ data, loading, addProduk, editProduk, deleteProduk }}
+      value={{
+        data,
+        loading,
+        addProduk,
+        editProduk,
+        deleteProduk,
+      }}
     >
       {children}
     </ProdukContext.Provider>

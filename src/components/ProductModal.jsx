@@ -16,35 +16,49 @@ export default function ProductModal({
 }) {
   const [nama, setNama] = useState("");
   const [harga, setHarga] = useState("");
-  const [deskripsi, setDeskripsi] =
-    useState("");
+  const [deskripsi, setDeskripsi] = useState("");
+
+  // =========================
+  // INFORMASI TAMBAHAN
+  // =========================
+
+  const [bobot, setBobot] = useState("");
+  const [jenisKelamin, setJenisKelamin] = useState("");
+  const [umur, setUmur] = useState("");
 
   const [image, setImage] = useState("");
   const [uploading, setUploading] = useState(false);
 
-  const [saving, setSaving] =
-    useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (initialData) {
       setNama(initialData.nama || "");
       setHarga(initialData.harga || "");
-      setDeskripsi(
-        initialData.deskripsi || ""
-      );
+      setDeskripsi(initialData.deskripsi || "");
+
+      setBobot(initialData.bobot || "");
+      setJenisKelamin(initialData.jenis_kelamin || "");
+      setUmur(initialData.umur || "");
+
       setImage(initialData.image || "");
     } else {
       setNama("");
       setHarga("");
       setDeskripsi("");
+
+      setBobot("");
+      setJenisKelamin("");
+      setUmur("");
+
       setImage("");
     }
+
     setUploading(false);
     setSaving(false);
   }, [initialData, open]);
 
   if (!open) return null;
-
 
   // =========================
   // UPLOAD GAMBAR
@@ -52,6 +66,7 @@ export default function ProductModal({
 
   async function handleImageChange(e) {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
@@ -67,7 +82,10 @@ export default function ProductModal({
     setUploading(true);
 
     const fileExt = file.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+
+    const fileName = `${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2)}.${fileExt}`;
 
     const { error: uploadError } = await supabase.storage
       .from("produk-images")
@@ -87,7 +105,6 @@ export default function ProductModal({
     setUploading(false);
   }
 
-
   // =========================
   // HAPUS GAMBAR
   // =========================
@@ -95,7 +112,6 @@ export default function ProductModal({
   function removeImage() {
     setImage("");
   }
-
 
   // =========================
   // SAVE
@@ -125,44 +141,41 @@ export default function ProductModal({
       nama: nama.trim(),
       harga: harga.trim(),
       deskripsi: deskripsi.trim(),
+
+      // OPSIONAL
+      bobot: bobot.trim(),
+      jenis_kelamin: jenisKelamin,
+      umur: umur.trim(),
+
       image: image || "",
     });
 
     setSaving(false);
   }
 
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
 
       {/* BACKDROP */}
-
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
-
       {/* MODAL */}
-
       <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
 
         {/* HEADER */}
-
         <div className="sticky top-0 z-10 bg-white border-b border-line px-6 py-4 flex items-center justify-between">
 
           <div>
-
             <p className="text-xs font-semibold uppercase tracking-wide text-primary">
               Manajemen Produk
             </p>
 
             <h2 className="text-lg font-bold text-ink mt-0.5">
-              {initialData
-                ? "Edit Produk"
-                : "Tambah Produk"}
+              {initialData ? "Edit Produk" : "Tambah Produk"}
             </h2>
-
           </div>
 
           <button
@@ -175,18 +188,14 @@ export default function ProductModal({
 
         </div>
 
-
         {/* FORM */}
-
         <form
           onSubmit={handleSubmit}
           className="p-6 space-y-5"
         >
 
           {/* ================= NAMA ================= */}
-
           <div>
-
             <label className="block text-sm font-semibold text-ink mb-2">
               Nama Produk
             </label>
@@ -194,9 +203,7 @@ export default function ProductModal({
             <input
               type="text"
               value={nama}
-              onChange={(e) =>
-                setNama(e.target.value)
-              }
+              onChange={(e) => setNama(e.target.value)}
               placeholder="Contoh: Ayam Kampung Hidup"
               className="
                 w-full
@@ -212,14 +219,10 @@ export default function ProductModal({
                 focus:ring-primary/10
               "
             />
-
           </div>
 
-
           {/* ================= HARGA ================= */}
-
           <div>
-
             <label className="block text-sm font-semibold text-ink mb-2">
               Harga
             </label>
@@ -227,10 +230,8 @@ export default function ProductModal({
             <input
               type="text"
               value={harga}
-              onChange={(e) =>
-                setHarga(e.target.value)
-              }
-              placeholder="Contoh: Rp 75.000 / ekor"
+              onChange={(e) => setHarga(e.target.value)}
+              placeholder="Contoh: Rp75.000 / ekor"
               className="
                 w-full
                 px-4
@@ -245,25 +246,140 @@ export default function ProductModal({
                 focus:ring-primary/10
               "
             />
-
           </div>
 
+          {/* ================= INFORMASI TAMBAHAN ================= */}
+          <div className="border border-line rounded-2xl p-4 bg-[#FAFBFA]">
+
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-ink">
+                Informasi Tambahan
+              </h3>
+
+              <p className="text-xs text-muted mt-1">
+                Opsional. Isi jika informasi tersedia.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+
+              {/* BOBOT */}
+              <div>
+                <label className="block text-sm font-semibold text-ink mb-2">
+                  Bobot
+                  <span className="ml-2 text-[11px] font-normal text-muted">
+                    (Opsional)
+                  </span>
+                </label>
+
+                <input
+                  type="text"
+                  value={bobot}
+                  onChange={(e) => setBobot(e.target.value)}
+                  placeholder="Contoh: 34,2 kg"
+                  className="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-xl
+                    border
+                    border-line
+                    text-sm
+                    outline-none
+                    bg-white
+                    focus:border-primary
+                    focus:ring-2
+                    focus:ring-primary/10
+                  "
+                />
+              </div>
+
+              {/* JENIS KELAMIN */}
+              <div>
+                <label className="block text-sm font-semibold text-ink mb-2">
+                  Jenis Kelamin
+                  <span className="ml-2 text-[11px] font-normal text-muted">
+                    (Opsional)
+                  </span>
+                </label>
+
+                <select
+                  value={jenisKelamin}
+                  onChange={(e) =>
+                    setJenisKelamin(e.target.value)
+                  }
+                  className="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-xl
+                    border
+                    border-line
+                    text-sm
+                    outline-none
+                    bg-white
+                    focus:border-primary
+                    focus:ring-2
+                    focus:ring-primary/10
+                  "
+                >
+                  <option value="">
+                    Pilih jenis kelamin
+                  </option>
+
+                  <option value="Jantan">
+                    Jantan
+                  </option>
+
+                  <option value="Betina">
+                    Betina
+                  </option>
+                </select>
+              </div>
+
+              {/* UMUR */}
+              <div>
+                <label className="block text-sm font-semibold text-ink mb-2">
+                  Umur
+                  <span className="ml-2 text-[11px] font-normal text-muted">
+                    (Opsional)
+                  </span>
+                </label>
+
+                <input
+                  type="text"
+                  value={umur}
+                  onChange={(e) => setUmur(e.target.value)}
+                  placeholder="Contoh: 6 bulan"
+                  className="
+                    w-full
+                    px-4
+                    py-3
+                    rounded-xl
+                    border
+                    border-line
+                    text-sm
+                    outline-none
+                    bg-white
+                    focus:border-primary
+                    focus:ring-2
+                    focus:ring-primary/10
+                  "
+                />
+              </div>
+
+            </div>
+          </div>
 
           {/* ================= DESKRIPSI ================= */}
-
           <div>
-
             <label className="block text-sm font-semibold text-ink mb-2">
               Deskripsi
             </label>
 
             <textarea
               value={deskripsi}
-              onChange={(e) =>
-                setDeskripsi(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setDeskripsi(e.target.value)}
               placeholder="Jelaskan produk..."
               rows={4}
               className="
@@ -281,20 +397,15 @@ export default function ProductModal({
                 focus:ring-primary/10
               "
             />
-
           </div>
 
-
           {/* ================= GAMBAR ================= */}
-
           <div>
-
             <label className="block text-sm font-semibold text-ink mb-2">
               Gambar Produk
             </label>
 
             {image ? (
-
               <div className="relative rounded-xl overflow-hidden border border-line bg-gray-50">
 
                 <img
@@ -327,24 +438,25 @@ export default function ProductModal({
                 </button>
 
               </div>
-
             ) : (
-
-              <label className={`
-                block
-                cursor-pointer
-                border-2
-                border-dashed
-                border-line
-                rounded-xl
-                p-8
-                text-center
-                transition-colors
-                ${uploading
-                  ? "opacity-60 pointer-events-none"
-                  : "hover:border-primary hover:bg-primary-light/30"
-                }
-              `}>
+              <label
+                className={`
+                  block
+                  cursor-pointer
+                  border-2
+                  border-dashed
+                  border-line
+                  rounded-xl
+                  p-8
+                  text-center
+                  transition-colors
+                  ${
+                    uploading
+                      ? "opacity-60 pointer-events-none"
+                      : "hover:border-primary hover:bg-primary-light/30"
+                  }
+                `}
+              >
 
                 <div className="w-12 h-12 mx-auto rounded-xl bg-primary-light flex items-center justify-center mb-3">
 
@@ -363,7 +475,9 @@ export default function ProductModal({
                 </div>
 
                 <p className="text-sm font-semibold text-ink">
-                  {uploading ? "Mengunggah..." : "Upload gambar produk"}
+                  {uploading
+                    ? "Mengunggah..."
+                    : "Upload gambar produk"}
                 </p>
 
                 {!uploading && (
@@ -377,11 +491,8 @@ export default function ProductModal({
                     </p>
 
                     <div className="inline-flex items-center gap-2 mt-4 bg-primary text-white px-4 py-2 rounded-lg text-xs font-semibold">
-
                       <Upload size={14} />
-
                       Pilih Gambar
-
                     </div>
                   </>
                 )}
@@ -389,22 +500,16 @@ export default function ProductModal({
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={
-                    handleImageChange
-                  }
+                  onChange={handleImageChange}
                   disabled={uploading}
                   className="hidden"
                 />
 
               </label>
-
             )}
-
           </div>
 
-
           {/* ================= BUTTON ================= */}
-
           <div className="flex gap-3 pt-2">
 
             <button
@@ -445,16 +550,14 @@ export default function ProductModal({
               {saving
                 ? "Menyimpan..."
                 : initialData
-                  ? "Simpan Perubahan"
-                  : "Tambah Produk"}
+                ? "Simpan Perubahan"
+                : "Tambah Produk"}
             </button>
 
           </div>
 
         </form>
-
       </div>
-
     </div>
   );
 }

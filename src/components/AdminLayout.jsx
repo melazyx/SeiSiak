@@ -1,205 +1,103 @@
 import {
   LayoutDashboard,
   Package,
+  PawPrint,
   LogOut,
-  ExternalLink,
   Menu,
   X,
+  ChevronDown,
   ChevronRight,
   UserCircle,
   LineChart,
-  PawPrint,
   Warehouse,
   History,
   Camera,
-  Images,
-  Tag,
+  FileText,
+  Settings,
+  Bell,
+  Tags,
 } from "lucide-react";
 
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
-
 import pertaminaLogo from "../assets/pertamina-logo.png";
 
 
 export default function AdminLayout({ children }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [produkOpen, setProdukOpen] = useState(true);
+  const [kategoriOpen, setKategoriOpen] = useState(false);
+  const [ternakOpen, setTernakOpen] = useState(false);
 
   const navigate = useNavigate();
+
   const { user, logout } = useAuth();
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
-  function handleLogout() {
-
-    const confirmLogout = window.confirm(
+  const handleLogout = () => {
+    const yakin = window.confirm(
       "Apakah kamu yakin ingin keluar dari halaman admin?"
     );
 
-    if (!confirmLogout) return;
+    if (!yakin) return;
 
     logout();
-
     navigate("/login");
+  };
 
-  }
 
-  const menuTernak = [
-    {
-      label: "Ternak Kambing",
-      path: "/admin/ternak/kambing",
-      icon: "🐐",
-    },
-    {
-      label: "Ternak Ayam",
-      path: "/admin/ternak/ayam",
-      icon: "🐔",
-    },
-  ];
+  const today = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 
-  const menuKategori = [
-    {
-      label: "Kategori Kambing",
-      path: "/admin/kategori/kambing",
-      icon: "🐐",
-    },
-    {
-      label: "Kategori Ayam",
-      path: "/admin/kategori/ayam",
-      icon: "🐔",
-    },
-    {
-      label: "Kategori Maggot",
-      path: "/admin/kategori/maggot",
-      icon: "🪱",
-    },
-  ];
 
-  const menuProduk = [
-    {
-      label: "Produk Kambing",
-      path: "/admin/produk/kambing",
-      icon: "🐐",
-    },
-
-    {
-      label: "Produk Ayam",
-      path: "/admin/produk/ayam",
-      icon: "🐔",
-    },
-
-    {
-      label: "Produk Maggot",
-      path: "/admin/produk/maggot",
-      icon: "🪱",
-    },
-  ];
+  const closeMobile = () => {
+    setMobileOpen(false);
+  };
 
 
   return (
-
-    <div className="min-h-screen bg-slate-50">
-
-
-      {/* ================================================= */}
-      {/* MOBILE OVERLAY */}
-      {/* ================================================= */}
-
-      {sidebarOpen && (
-
-        <div
-          className="
-            fixed
-            inset-0
-            bg-black/40
-            z-40
-            lg:hidden
-          "
-          onClick={() => setSidebarOpen(false)}
-        />
-
-      )}
+    <div className="min-h-screen bg-[#F5F8FC]">
 
 
-      {/* ================================================= */}
-      {/* SIDEBAR */}
-      {/* ================================================= */}
+      {/* =====================================================
+          MOBILE HEADER
+      ====================================================== */}
 
-      <aside
-        className={`
-          fixed
-          z-50
-          top-0
-          left-0
-          h-screen
-          w-72
-          bg-[#062A55]
-          text-white
-          flex
-          flex-col
-          transition-transform
-          duration-300
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-[#0F4229] flex items-center justify-between px-4 shadow-md">
 
-          ${sidebarOpen
-            ? "translate-x-0"
-            : "-translate-x-full lg:translate-x-0"
-          }
-        `}
-      >
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-white hover:bg-white/10 transition"
+        >
+          <Menu size={22} />
+        </button>
 
 
-        {/* ================================================= */}
-        {/* BRAND */}
-        {/* ================================================= */}
+        <div className="flex items-center gap-2">
 
-        <div className="px-6 py-6 border-b border-white/10">
-
-          <div className="flex items-center gap-3">
-
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-2">
-
-              <img
-                src={pertaminaLogo}
-                alt="Pertamina Patra Niaga"
-                className="w-full h-full object-contain"
-              />
-
-            </div>
-
-
-            <div>
-
-              <p className="text-sm font-bold tracking-wide">
-                PERTAMINA
-              </p>
-
-              <p className="text-sm font-bold text-red-400">
-                PATRA NIAGA
-              </p>
-
-            </div>
-
-
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="ml-auto lg:hidden text-white/70 hover:text-white"
-            >
-              <X size={20} />
-            </button>
-
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden">
+            <img
+              src={pertaminaLogo}
+              alt="Pertamina"
+              className="w-6 h-6 object-contain"
+            />
           </div>
 
+          <div className="text-white">
 
-          <div className="mt-5">
-
-            <p className="text-xs text-blue-200 uppercase tracking-wider font-semibold">
-              Fuel Terminal
+            <p className="text-[11px] font-bold leading-none">
+              JURAGAN KAMBING
             </p>
 
-            <p className="text-lg font-bold mt-1">
-              Sei Siak
+            <p className="text-[8px] opacity-70 mt-1">
+              SEI SIAK
             </p>
 
           </div>
@@ -207,42 +105,179 @@ export default function AdminLayout({ children }) {
         </div>
 
 
-        {/* ================================================= */}
-        {/* NAVIGATION */}
-        {/* ================================================= */}
+        <div className="w-9" />
 
-        <div className="flex-1 overflow-y-auto px-4 py-6">
+      </div>
 
 
-          {/* ADMIN PANEL */}
 
-          <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-            Admin Panel
-          </p>
+      {/* =====================================================
+          MOBILE OVERLAY
+      ====================================================== */}
 
+      {mobileOpen && (
+        <div
+          onClick={closeMobile}
+          className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-[1px]"
+        />
+      )}
+
+
+
+      {/* =====================================================
+          SIDEBAR
+      ====================================================== */}
+
+      <aside
+        className={`
+          fixed
+          z-50
+          top-0
+          bottom-0
+          left-0
+          w-[230px]
+          bg-[#0F4229]
+          text-white
+          shadow-xl
+          transition-transform
+          duration-300
+
+          lg:translate-x-0
+
+          ${
+            mobileOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          }
+        `}
+      >
+
+
+        {/* =================================================
+            CLOSE MOBILE
+        ================================================== */}
+
+        <button
+          onClick={closeMobile}
+          className="lg:hidden absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white"
+        >
+          <X size={18} />
+        </button>
+
+
+
+        {/* =================================================
+            BRAND
+        ================================================== */}
+
+        <div className="px-5 pt-5 pb-4">
+
+          <div className="flex items-center gap-3">
+
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
+
+              <img
+                src={pertaminaLogo}
+                alt="Pertamina"
+                className="w-8 h-8 object-contain"
+              />
+
+            </div>
+
+
+            <div>
+
+              <h1 className="font-bold text-[11px] leading-tight">
+                JURAGAN KAMBING
+              </h1>
+
+              <p className="text-[8px] text-white/55 mt-1">
+                SEI SIAK
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        {/* =================================================
+            USER PROFILE
+        ================================================== */}
+
+        <div className="mx-3 mb-4">
+
+          <div className="p-3 rounded-xl bg-[#0A3824] border border-white/5">
+
+            <div className="flex items-center gap-3">
+
+              <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+
+                <UserCircle
+                  size={23}
+                  className="text-white"
+                />
+
+              </div>
+
+
+              <div className="min-w-0">
+
+                <p className="text-[11px] font-semibold truncate">
+                  {user?.nama || "Admin"}
+                </p>
+
+                <p className="text-[8px] text-white/50 truncate">
+                  Super Admin
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        {/* =================================================
+            NAVIGATION
+        ================================================== */}
+
+        <nav className="px-3 pb-24 overflow-y-auto h-[calc(100vh-165px)] scrollbar-thin">
+
+
+          {/* =================================================
+              DASHBOARD
+          ================================================== */}
 
           <NavLink
             to="/admin/dashboard"
-            onClick={() => setSidebarOpen(false)}
+            onClick={closeMobile}
             className={({ isActive }) => `
               flex
               items-center
               gap-3
-              px-4
-              py-3
-              rounded-xl
-              text-sm
-              font-semibold
+              px-3
+              py-2.5
+              rounded-lg
+              mb-1
+              text-[11px]
+              font-medium
               transition-all
 
-              ${isActive
-                ? "bg-white text-[#062A55] shadow-sm"
-                : "text-white/80 hover:bg-white/10 hover:text-white"
+              ${
+                isActive
+                  ? "bg-[#087F5B] text-white shadow-sm"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
               }
             `}
           >
 
-            <LayoutDashboard size={19} />
+            <LayoutDashboard size={16} />
 
             <span>
               Dashboard
@@ -251,573 +286,684 @@ export default function AdminLayout({ children }) {
           </NavLink>
 
 
-          {/* PRODUK */}
 
-          <div className="mt-7">
+          {/* =================================================
+              PRODUK
+          ================================================== */}
 
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-              Manajemen Produk
-            </p>
+          <button
+            onClick={() => setProdukOpen(!produkOpen)}
+            className={`
+              w-full
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                produkOpen
+                  ? "text-white"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
+
+            <Package size={16} />
+
+            <span className="flex-1 text-left">
+              Produk
+            </span>
+
+            {produkOpen ? (
+              <ChevronDown size={14} />
+            ) : (
+              <ChevronRight size={14} />
+            )}
+
+          </button>
 
 
-            <div className="space-y-1">
+          {produkOpen && (
+            <div className="ml-4 pl-3 border-l border-white/10 mb-1 space-y-0.5">
 
-              {menuProduk.map((item) => (
+              <NavLink
+                to="/admin/produk/kambing"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Produk Kambing
+              </NavLink>
 
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setSidebarOpen(false)}
-                  className={({ isActive }) => `
-                    flex
-                    items-center
-                    gap-3
-                    px-4
-                    py-3
-                    rounded-xl
-                    text-sm
-                    font-medium
-                    transition-all
 
-                    ${isActive
-                      ? "bg-red-600 text-white shadow-sm"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
-                    }
-                  `}
-                >
+              <NavLink
+                to="/admin/produk/ayam"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Produk Ayam
+              </NavLink>
 
-                  <span className="text-lg">
-                    {item.icon}
-                  </span>
 
-                  <span className="flex-1">
-                    {item.label}
-                  </span>
-
-                  <ChevronRight
-                    size={15}
-                    className="opacity-50"
-                  />
-
-                </NavLink>
-
-              ))}
-
-            </div>
-
-          </div>
-
-          {/* KATEGORI */}
-
-          <div className="mt-7">
-
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-              Pengaturan Tab
-            </p>
-
-            <div className="space-y-1">
-
-              {menuKategori.map((item) => (
-
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setSidebarOpen(false)}
-                  className={({ isActive }) => `
-                    flex
-                    items-center
-                    gap-3
-                    px-4
-                    py-3
-                    rounded-xl
-                    text-sm
-                    font-medium
-                    transition-all
-
-                    ${isActive
-                      ? "bg-red-600 text-white shadow-sm"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
-                    }
-                  `}
-                >
-
-                  <span className="text-lg">
-                    {item.icon}
-                  </span>
-
-                  <span className="flex-1">
-                    {item.label}
-                  </span>
-
-                  <ChevronRight
-                    size={15}
-                    className="opacity-50"
-                  />
-
-                </NavLink>
-
-              ))}
-
-            </div>
-
-          </div>
-
-          {/* TERNAK & KESEHATAN */}
-
-          <div className="mt-7">
-
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-              Ternak & Kesehatan
-            </p>
-
-            <div className="space-y-1">
-
-              {menuTernak.map((item) => (
-
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setSidebarOpen(false)}
-                  className={({ isActive }) => `
-                    flex
-                    items-center
-                    gap-3
-                    px-4
-                    py-3
-                    rounded-xl
-                    text-sm
-                    font-medium
-                    transition-all
-
-                    ${isActive
-                      ? "bg-red-600 text-white shadow-sm"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
-                    }
-                  `}
-                >
-
-                  <span className="text-lg">
-                    {item.icon}
-                  </span>
-
-                  <span className="flex-1">
-                    {item.label}
-                  </span>
-
-                  <ChevronRight
-                    size={15}
-                    className="opacity-50"
-                  />
-
-                </NavLink>
-
-              ))}
+              <NavLink
+                to="/admin/produk/maggot"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Produk Maggot
+              </NavLink>
 
             </div>
+          )}
 
-          </div>
 
-          {/* GUDANG PAKAN */}
 
-          <div className="mt-7">
+          {/* =================================================
+              KATEGORI
+          ================================================== */}
 
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-              Gudang
-            </p>
+          <button
+            onClick={() => setKategoriOpen(!kategoriOpen)}
+            className={`
+              w-full
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                kategoriOpen
+                  ? "text-white"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
 
-            <NavLink
-              to="/admin/gudang-pakan"
-              onClick={() => setSidebarOpen(false)}
-              className={({ isActive }) => `
-                flex
-                items-center
-                gap-3
-                px-4
-                py-3
-                rounded-xl
-                text-sm
-                font-semibold
-                transition-all
+            <Tags size={16} />
 
-                ${isActive
-                  ? "bg-white text-[#062A55] shadow-sm"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-                }
-              `}
-            >
+            <span className="flex-1 text-left">
+              Kategori
+            </span>
 
-              <Warehouse size={19} />
+            {kategoriOpen ? (
+              <ChevronDown size={14} />
+            ) : (
+              <ChevronRight size={14} />
+            )}
 
-              <span>
-                Gudang Pakan
-              </span>
+          </button>
 
-            </NavLink>
 
-          </div>
+          {kategoriOpen && (
+            <div className="ml-4 pl-3 border-l border-white/10 mb-1 space-y-0.5">
 
-          {/* RIWAYAT AKTIVITAS */}
+              <NavLink
+                to="/admin/kategori/kambing"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Kategori Kambing
+              </NavLink>
 
-          <div className="mt-7">
 
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-              Audit
-            </p>
+              <NavLink
+                to="/admin/kategori/ayam"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Kategori Ayam
+              </NavLink>
 
-            <NavLink
-              to="/admin/riwayat-aktivitas"
-              onClick={() => setSidebarOpen(false)}
-              className={({ isActive }) => `
-                flex
-                items-center
-                gap-3
-                px-4
-                py-3
-                rounded-xl
-                text-sm
-                font-semibold
-                transition-all
 
-                ${isActive
-                  ? "bg-white text-[#062A55] shadow-sm"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-                }
-              `}
-            >
+              <NavLink
+                to="/admin/kategori/maggot"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Kategori Maggot
+              </NavLink>
 
-              <History size={19} />
+            </div>
+          )}
 
-              <span>
-                Riwayat Aktivitas
-              </span>
 
-            </NavLink>
 
-          </div>
+          {/* =================================================
+              TERNAK
+          ================================================== */}
 
-          {/* PRODUKSI & PENJUALAN */}
+          <button
+            onClick={() => setTernakOpen(!ternakOpen)}
+            className={`
+              w-full
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                ternakOpen
+                  ? "text-white"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
 
-          <div className="mt-7">
+            <PawPrint size={16} />
 
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
+            <span className="flex-1 text-left">
+              Ternak
+            </span>
+
+            {ternakOpen ? (
+              <ChevronDown size={14} />
+            ) : (
+              <ChevronRight size={14} />
+            )}
+
+          </button>
+
+
+          {ternakOpen && (
+            <div className="ml-4 pl-3 border-l border-white/10 mb-1 space-y-0.5">
+
+              <NavLink
+                to="/admin/ternak/kambing"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Ternak Kambing
+              </NavLink>
+
+
+              <NavLink
+                to="/admin/ternak/ayam"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Ternak Ayam
+              </NavLink>
+
+
+              <NavLink
+                to="/admin/ternak/maggot"
+                onClick={closeMobile}
+                className={({ isActive }) => `
+                  block
+                  px-3
+                  py-2
+                  rounded-md
+                  text-[10px]
+                  transition
+                  ${
+                    isActive
+                      ? "bg-[#087F5B] text-white font-semibold"
+                      : "text-white/55 hover:text-white hover:bg-white/5"
+                  }
+                `}
+              >
+                Ternak Maggot
+              </NavLink>
+
+            </div>
+          )}
+
+
+
+          {/* =================================================
+              PRODUKSI & PENJUALAN
+          ================================================== */}
+
+          <NavLink
+            to="/admin/produksi-penjualan"
+            onClick={closeMobile}
+            className={({ isActive }) => `
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                isActive
+                  ? "bg-[#087F5B] text-white shadow-sm"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
+
+            <LineChart size={16} />
+
+            <span>
+              Produksi & Penjualan
+            </span>
+
+          </NavLink>
+
+
+
+          {/* =================================================
+              GUDANG PAKAN
+          ================================================== */}
+
+          <NavLink
+            to="/admin/gudang-pakan"
+            onClick={closeMobile}
+            className={({ isActive }) => `
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                isActive
+                  ? "bg-[#087F5B] text-white shadow-sm"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
+
+            <Warehouse size={16} />
+
+            <span>
+              Gudang Pakan
+            </span>
+
+          </NavLink>
+
+
+
+          {/* =================================================
+              KEGIATAN
+          ================================================== */}
+
+          <NavLink
+            to="/admin/kegiatan"
+            onClick={closeMobile}
+            className={({ isActive }) => `
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                isActive
+                  ? "bg-[#087F5B] text-white shadow-sm"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
+
+            <Camera size={16} />
+
+            <span>
+              Kegiatan
+            </span>
+
+          </NavLink>
+
+
+
+          {/* =================================================
+              GALERI
+          ================================================== */}
+
+          <NavLink
+            to="/admin/galeri"
+            onClick={closeMobile}
+            className={({ isActive }) => `
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                isActive
+                  ? "bg-[#087F5B] text-white shadow-sm"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
+
+            <Camera size={16} />
+
+            <span>
+              Galeri
+            </span>
+
+          </NavLink>
+
+
+
+          {/* =================================================
+              LAPORAN
+          ================================================== */}
+
+          <NavLink
+            to="/admin/produksi-penjualan"
+            onClick={closeMobile}
+            className={({ isActive }) => `
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                isActive
+                  ? "bg-[#087F5B] text-white shadow-sm"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
+
+            <FileText size={16} />
+
+            <span>
               Laporan
-            </p>
+            </span>
 
-            <NavLink
-              to="/admin/produksi-penjualan"
-              onClick={() => setSidebarOpen(false)}
-              className={({ isActive }) => `
-                flex
-                items-center
-                gap-3
-                px-4
-                py-3
-                rounded-xl
-                text-sm
-                font-semibold
-                transition-all
-
-                ${isActive
-                  ? "bg-white text-[#062A55] shadow-sm"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-                }
-              `}
-            >
-
-              <LineChart size={19} />
-
-              <span>
-                Produksi & Penjualan
-              </span>
-
-            </NavLink>
-
-          </div>
-
-          {/* KONTEN WEBSITE */}
-
-          <div className="mt-7">
-
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-              Konten Website
-            </p>
-
-            <div className="space-y-1">
-
-              <NavLink
-                to="/admin/kegiatan"
-                onClick={() => setSidebarOpen(false)}
-                className={({ isActive }) => `
-                  flex
-                  items-center
-                  gap-3
-                  px-4
-                  py-3
-                  rounded-xl
-                  text-sm
-                  font-semibold
-                  transition-all
-
-                  ${isActive
-                    ? "bg-white text-[#062A55] shadow-sm"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
-                  }
-                `}
-              >
-
-                <Camera size={19} />
-
-                <span>
-                  Kelola Kegiatan
-                </span>
-
-              </NavLink>
-
-              <NavLink
-                to="/admin/galeri"
-                onClick={() => setSidebarOpen(false)}
-                className={({ isActive }) => `
-                  flex
-                  items-center
-                  gap-3
-                  px-4
-                  py-3
-                  rounded-xl
-                  text-sm
-                  font-semibold
-                  transition-all
-
-                  ${isActive
-                    ? "bg-white text-[#062A55] shadow-sm"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
-                  }
-                `}
-              >
-
-                <Images size={19} />
-
-                <span>
-                  Kelola Galeri
-                </span>
-
-              </NavLink>
-
-            </div>
-
-          </div>
-
-          {/* WEBSITE */}
-
-          <div className="mt-7">
-
-            <p className="px-3 text-[11px] uppercase tracking-wider text-blue-200 font-bold mb-3">
-              Website
-            </p>
+          </NavLink>
 
 
-            <button
-              onClick={() => navigate("/")}
-              className="
-                w-full
-                flex
-                items-center
-                gap-3
-                px-4
-                py-3
-                rounded-xl
-                text-sm
-                font-medium
-                text-white/80
-                hover:bg-white/10
-                hover:text-white
-                transition-colors
-              "
-            >
 
-              <ExternalLink size={19} />
+          {/* =================================================
+              RIWAYAT AKTIVITAS
+          ================================================== */}
 
-              <span>
-                Lihat Website
-              </span>
+          <NavLink
+            to="/admin/riwayat-aktivitas"
+            onClick={closeMobile}
+            className={({ isActive }) => `
+              flex
+              items-center
+              gap-3
+              px-3
+              py-2.5
+              rounded-lg
+              text-[11px]
+              font-medium
+              transition
+              ${
+                isActive
+                  ? "bg-[#087F5B] text-white shadow-sm"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }
+            `}
+          >
 
-            </button>
+            <History size={16} />
 
-          </div>
+            <span>
+              Riwayat Aktivitas
+            </span>
+
+          </NavLink>
+
+        </nav>
+
+
+
+        {/* =================================================
+            BOTTOM MENU
+        ================================================== */}
+
+        <div className="absolute left-3 right-3 bottom-3 bg-[#0F4229] pt-2">
+
+          <button
+            onClick={() => navigate("/admin/pengaturan")}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[11px] text-white/70 hover:bg-white/10 hover:text-white transition"
+          >
+
+            <Settings size={16} />
+
+            <span>
+              Pengaturan
+            </span>
+
+          </button>
+
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[11px] text-white/70 hover:bg-red-500/15 hover:text-red-300 transition"
+          >
+
+            <LogOut size={16} />
+
+            <span>
+              Keluar
+            </span>
+
+          </button>
 
         </div>
 
-
-        {/* ================================================= */}
-        {/* USER */}
-        {/* ================================================= */}
-
-        <div className="border-t border-white/10 p-4">
+      </aside>
 
 
-          <div className="
-            bg-white/5
-            rounded-xl
-            p-4
-            mb-3
-          ">
 
-            <div className="flex items-center gap-3">
+      {/* =====================================================
+          MAIN AREA
+      ====================================================== */}
 
-              <div className="
-                w-10
-                h-10
-                rounded-full
-                bg-white
-                flex
-                items-center
-                justify-center
-              ">
+      <div className="lg:ml-[230px] min-h-screen">
+
+
+        {/* =================================================
+            TOPBAR
+        ================================================== */}
+
+        <header className="hidden lg:flex h-[58px] bg-white border-b border-[#E5E9E7] items-center justify-end px-7">
+
+          <div className="flex items-center gap-5">
+
+
+            {/* DATE */}
+
+            <div className="text-right">
+
+              <p className="text-[9px] text-[#8A949E]">
+                Hari ini
+              </p>
+
+              <p className="text-[10px] font-semibold text-[#45515B]">
+                {today}
+              </p>
+
+            </div>
+
+
+
+            {/* NOTIFICATION */}
+
+            <button
+              className="relative w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition"
+            >
+
+              <Bell
+                size={16}
+                className="text-[#5C6670]"
+              />
+
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#D71920] rounded-full" />
+
+            </button>
+
+
+
+            {/* USER */}
+
+            <div className="flex items-center gap-2">
+
+              <div className="w-8 h-8 rounded-full bg-[#E8F5EF] flex items-center justify-center">
 
                 <UserCircle
-                  size={25}
-                  className="text-[#062A55]"
+                  size={22}
+                  className="text-[#087F5B]"
                 />
 
               </div>
 
 
-              <div className="min-w-0">
+              <div className="hidden xl:block">
 
-                <p className="text-sm font-bold truncate">
-
+                <p className="text-[10px] font-semibold text-[#27313A]">
                   {user?.nama || "Admin"}
-
                 </p>
 
-                <p className="text-xs text-blue-200 truncate mt-0.5">
-
-                  {user?.email || "admin@juragankambing.com"}
-
+                <p className="text-[8px] text-[#8A949E]">
+                  Super Admin
                 </p>
 
               </div>
 
             </div>
 
-
-            <div className="flex items-center gap-2 mt-3">
-
-              <span className="w-2 h-2 rounded-full bg-green-400" />
-
-              <span className="text-xs text-white/70">
-                Admin aktif
-              </span>
-
-            </div>
-
           </div>
 
-
-          <button
-            onClick={handleLogout}
-            className="
-              w-full
-              flex
-              items-center
-              justify-center
-              gap-2
-              px-4
-              py-3
-              rounded-xl
-              text-sm
-              font-semibold
-              text-red-300
-              hover:bg-red-500/10
-              hover:text-red-200
-              transition-colors
-            "
-          >
-
-            <LogOut size={18} />
-
-            Keluar
-
-          </button>
+        </header>
 
 
-          <p className="text-[10px] text-center text-white/30 mt-3">
-            PT Pertamina Patra Niaga
-          </p>
 
-        </div>
+        {/* =================================================
+            CONTENT
+        ================================================== */}
 
+        <main className="pt-16 lg:pt-0 min-h-[calc(100vh-58px)]">
 
-        {/* ================================================= */}
-        {/* DECORATION */}
-        {/* ================================================= */}
+          {children}
 
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" />
-
-      </aside>
+        </main>
 
 
-      {/* ================================================= */}
-      {/* MAIN */}
-      {/* ================================================= */}
-
-      <main className="lg:ml-72 min-h-screen">
-
-
-        {/* MOBILE HEADER */}
-
-        <div className="
-          lg:hidden
-          sticky
-          top-0
-          z-30
-          bg-white
-          border-b
-          border-slate-200
-          px-5
-          py-4
-          flex
-          items-center
-          gap-4
-        ">
-
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="
-              w-10
-              h-10
-              rounded-xl
-              bg-slate-100
-              flex
-              items-center
-              justify-center
-            "
-          >
-
-            <Menu size={21} />
-
-          </button>
-
-
-          <div>
-
-            <p className="text-sm font-bold text-slate-900">
-              Admin Panel
-            </p>
-
-            <p className="text-[11px] text-slate-400">
-              Fuel Terminal Sei Siak
-            </p>
-
-          </div>
-
-        </div>
-
-
-        {children}
-
-      </main>
+      </div>
 
     </div>
-
   );
 }

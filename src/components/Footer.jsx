@@ -3,334 +3,200 @@ import {
   Phone,
   MapPin,
   Mail,
-  MessageCircle,
+  PawPrint,
 } from "lucide-react";
 
 import pertaminaLogo from "../assets/pertamina-logo.png";
-import { ShieldCheck } from "lucide-react";
 
+const ADDRESS = "Jl. Sei Siak, Pekanbaru, Riau";
+const PHONE = "0812 7095 8582";
+const EMAIL = "juragankambing@seisiak.id";
 const WA_NUMBER = "6281270958582";
 
-const ADDRESS =
-  "Fuel Terminal Sei Siak, Kota Pekanbaru, Riau";
-
-const EMAIL =
-  "juragankambing@pertamina.com";
-
 const menu = [
-  {
-    to: "/",
-    label: "Beranda",
-  },
-  {
-    to: "/kambing",
-    label: "Kambing",
-  },
-  {
-    to: "/ayam",
-    label: "Ayam",
-  },
-  {
-    to: "/maggot",
-    label: "Maggot",
-  },
-  {
-    to: "/tentang",
-    label: "Tentang Kami",
-  },
+  { to: "/", label: "Beranda" },
+  { to: "/kambing", label: "Kambing" },
+  { to: "/ayam", label: "Ayam" },
+  { to: "/maggot", label: "Maggot" },
+  { to: "/tentang", label: "Tentang Kami" },
 ];
 
 export default function Footer() {
   const whatsappLink =
     `https://wa.me/${WA_NUMBER}?text=` +
     encodeURIComponent(
-      "Halo, saya ingin bertanya tentang produk Juragan Kambing Sei Siak."
+      "Halo, saya ingin bertanya tentang Juragan Kambing Sei Siak."
     );
 
   return (
-    <footer className="bg-white">
-
-      {/* BRAND STRIPE */}
-      <div className="flex h-1.5">
-        <div className="flex-1 bg-primary" />
-        <div className="flex-1 bg-secondary" />
-        <div className="flex-1 bg-accent" />
-      </div>
-
-      <div className="
-        max-w-7xl
-        mx-auto
-        px-5
-        sm:px-8
-        py-12
-      ">
-
-        <div className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-4
-          gap-10
-        ">
+    <footer className="bg-white border-t border-line mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-9 lg:gap-12">
 
           {/* BRAND */}
           <div>
+            <Link to="/" className="inline-flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                <PawPrint size={19} className="text-white" />
+              </div>
 
-            <img
-              src={pertaminaLogo}
-              alt="Pertamina Patra Niaga"
-              className="h-12 w-auto"
-            />
+              <div className="leading-tight">
+                <p className="font-heading text-sm font-extrabold text-ink">
+                  JURAGAN KAMBING
+                </p>
 
-            <p className="
-              mt-3
-              text-xs
-              font-semibold
-              text-muted
-              uppercase
-              tracking-wider
-            ">
-              Fuel Terminal Sei Siak
+                <p className="text-xs font-bold text-primary">
+                  SEI SIAK
+                </p>
+              </div>
+            </Link>
+
+            <p className="mt-4 text-[10px] sm:text-xs text-muted leading-relaxed max-w-[240px]">
+              Peternakan lokal Sei Siak dengan produk berkualitas
+              dan layanan titip ternak yang dikelola secara
+              bertanggung jawab.
             </p>
 
-            <p className="
-              mt-4
-              text-sm
-              text-muted
-              leading-relaxed
-              max-w-xs
-            ">
-              Juragan Kambing Sei Siak merupakan
-              bagian dari pengembangan UMKM yang
-              didukung oleh Pertamina Patra Niaga.
-            </p>
+            {/* STATUS */}
+            <div className="mt-4 inline-flex items-center gap-2 bg-primary-tint px-3 py-2 rounded-lg">
+              <div className="w-2 h-2 rounded-full bg-primary" />
 
+              <span className="text-[10px] font-semibold text-primary">
+                Peternakan Lokal Sei Siak
+              </span>
+            </div>
           </div>
 
-          {/* MENU */}
+          {/* NAVIGASI */}
           <div>
-
-            <h3 className="
-              font-heading
-              font-bold
-              text-ink
-              mb-4
-            ">
-              Menu
+            <h3 className="font-heading text-xs sm:text-sm font-bold text-ink mb-4">
+              Navigasi
             </h3>
 
-            <div className="
-              flex
-              flex-col
-              gap-3
-            ">
-
+            <ul className="space-y-2.5">
               {menu.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className="
-                    text-sm
-                    text-muted
-                    hover:text-primary
-                    transition-colors
-                  "
-                >
-                  {item.label}
-                </Link>
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    className="text-[10px] sm:text-xs text-muted hover:text-primary transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
               ))}
-
-            </div>
-
+            </ul>
           </div>
 
           {/* KONTAK */}
           <div>
-
-            <h3 className="
-              font-heading
-              font-bold
-              text-ink
-              mb-4
-            ">
-              Kontak Kami
+            <h3 className="font-heading text-xs sm:text-sm font-bold text-ink mb-4">
+              Kontak
             </h3>
 
-            <div className="
-              flex
-              flex-col
-              gap-4
-            ">
+            <div className="space-y-3">
 
+              {/* ALAMAT */}
+              <div className="flex items-start gap-2.5">
+                <div className="w-6 h-6 rounded-full bg-primary-tint flex items-center justify-center shrink-0">
+                  <MapPin size={12} className="text-primary" />
+                </div>
+
+                <p className="text-[10px] sm:text-xs text-muted leading-relaxed">
+                  {ADDRESS}
+                </p>
+              </div>
+
+              {/* WHATSAPP */}
               <a
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="
-                  flex
-                  items-start
-                  gap-3
-                  text-sm
-                  text-muted
-                  hover:text-primary
-                "
+                className="flex items-center gap-2.5 group"
               >
-                <MessageCircle
-                  size={17}
-                  className="text-primary mt-0.5"
-                />
+                <div className="w-6 h-6 rounded-full bg-primary-tint flex items-center justify-center shrink-0">
+                  <Phone size={12} className="text-primary" />
+                </div>
 
-                <span>
-                  +62 812 3456 7890
+                <span className="text-[10px] sm:text-xs text-muted group-hover:text-primary transition-colors">
+                  {PHONE}
                 </span>
               </a>
 
-              <div className="
-                flex
-                items-start
-                gap-3
-                text-sm
-                text-muted
-              ">
-                <MapPin
-                  size={17}
-                  className="text-secondary mt-0.5"
-                />
+              {/* EMAIL */}
+              <a
+                href={`mailto:${EMAIL}`}
+                className="flex items-start gap-2.5 group"
+              >
+                <div className="w-6 h-6 rounded-full bg-primary-tint flex items-center justify-center shrink-0">
+                  <Mail size={12} className="text-primary" />
+                </div>
 
-                <span>
-                  {ADDRESS}
-                </span>
-              </div>
-
-              <div className="
-                flex
-                items-start
-                gap-3
-                text-sm
-                text-muted
-              ">
-                <Mail
-                  size={17}
-                  className="text-accent-dark mt-0.5"
-                />
-
-                <span>
+                <span className="text-[10px] sm:text-xs text-muted group-hover:text-primary transition-colors break-all leading-relaxed">
                   {EMAIL}
                 </span>
+              </a>
+
+            </div>
+          </div>
+
+          {/* PERTAMINA */}
+          <div>
+            <h3 className="font-heading text-xs sm:text-sm font-bold text-ink mb-4">
+              Didukung Oleh
+            </h3>
+
+            <div className="inline-flex items-center gap-3 bg-cream border border-line rounded-xl px-4 py-3">
+
+              <img
+                src={pertaminaLogo}
+                alt="Pertamina Patra Niaga"
+                className="h-8 sm:h-9 w-auto"
+              />
+
+              <div className="leading-tight">
+                <p className="text-[9px] text-muted">
+                  UMKM Binaan
+                </p>
+
+                <p className="text-[10px] font-bold text-ink">
+                  Pertamina Patra Niaga
+                </p>
+
+                <p className="text-[9px] text-muted">
+                  Fuel Terminal Sei Siak
+                </p>
               </div>
 
             </div>
 
-          </div>
-
-          {/* BRAND MESSAGE */}
-          <div>
-
-            <h3 className="
-              font-heading
-              font-bold
-              text-ink
-              mb-4
-            ">
-              Bersama untuk Berkelanjutan
-            </h3>
-
-            <p className="
-              text-sm
-              text-muted
-              leading-relaxed
-            ">
-              Dari yang kecil, untuk dampak
-              yang besar bagi masyarakat
-              dan lingkungan.
+            <p className="mt-3 text-[9px] sm:text-[10px] text-muted leading-relaxed max-w-[230px]">
+              Mendukung pengembangan UMKM dan peternakan
+              berkelanjutan di wilayah Sei Siak.
             </p>
-
-            <div className="
-              mt-5
-              p-4
-              rounded-2xl
-              bg-secondary-light
-              border
-              border-secondary/10
-            ">
-
-              <p className="
-                text-xs
-                font-bold
-                text-secondary
-              ">
-                Energizing Sustainable Future
-              </p>
-
-              <p className="
-                text-[10px]
-                text-muted
-                mt-1
-              ">
-                Pertamina Patra Niaga
-              </p>
-
-            </div>
-
           </div>
 
         </div>
-
-        {/* BOTTOM */}
-        <div className="
-          mt-10
-          pt-6
-          border-t
-          border-line
-          flex
-          flex-col
-          sm:flex-row
-          items-center
-          justify-between
-          gap-3
-        ">
-
-          <p className="
-            text-xs
-            text-muted
-          ">
-            © 2026 Juragan Kambing Sei Siak
-          </p>
-
-          <div className="mt-8 pt-6 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-3">
-
-  
-
-            <Link
-              to="/login"
-              className="
-      flex
-      items-center
-      gap-2
-      text-xs
-      text-muted
-      hover:text-primary
-      transition-colors
-    "
-            >
-              <ShieldCheck size={14} />
-              Login Admin
-            </Link>
-
-          </div>
-
-          <p className="
-            text-xs
-            text-muted
-            text-center
-          ">
-            Pertamina Patra Niaga • Fuel Terminal Sei Siak
-          </p>
-
-        </div>
-
       </div>
 
+      {/* COPYRIGHT */}
+      <div className="border-t border-line">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+
+            <p className="text-[9px] sm:text-[10px] text-muted text-center sm:text-left">
+              © {new Date().getFullYear()} Juragan Kambing Sei Siak.
+              Semua hak dilindungi.
+            </p>
+
+            <p className="text-[9px] sm:text-[10px] text-muted text-center">
+              Mendukung peternakan lokal yang berkelanjutan.
+            </p>
+
+          </div>
+
+        </div>
+      </div>
     </footer>
   );
 }

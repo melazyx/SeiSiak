@@ -1,4 +1,14 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+/* ============================================================
+   CONTEXT
+============================================================ */
+
 import { AuthProvider } from "./context/AuthContext";
 import { ProdukProvider } from "./context/ProdukContext";
 import { LaporanProvider } from "./context/LaporanContext";
@@ -7,15 +17,32 @@ import { PakanProvider } from "./context/PakanContext";
 import { KegiatanProvider } from "./context/KegiatanContext";
 import { GaleriProvider } from "./context/GaleriContext";
 import { KategoriProvider } from "./context/KategoriContext";
+
+/* ============================================================
+   COMPONENTS
+============================================================ */
+
 import PrivateRoute from "./components/PrivateRoute";
-import TentangKami from "./pages/TentangKami";
+import AdminLayout from "./components/AdminLayout";
+
+/* ============================================================
+   PUBLIC PAGES
+============================================================ */
+
 import Beranda from "./pages/Beranda";
-import Kambing from "./pages/Kambing";
-import Ayam from "./pages/Ayam";
-import Maggot from "./pages/Maggot";
+import Katalog from "./pages/Katalog";
+import DetailProduk from "./pages/DetailProduk";
+import TitipTernak from "./pages/TitipTernak";
 import LacakTernak from "./pages/LacakTernak";
+import TentangKami from "./pages/TentangKami";
+
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+
+/* ============================================================
+   ADMIN PAGES
+============================================================ */
+
 import Dashboard from "./pages/admin/Dashboard";
 import KelolaProduk from "./pages/admin/KelolaProduk";
 import PantauProduksi from "./pages/admin/PantauProduksi";
@@ -25,6 +52,8 @@ import RiwayatAktivitas from "./pages/admin/RiwayatAktivitas";
 import KelolaKegiatan from "./pages/admin/KelolaKegiatan";
 import KelolaGaleri from "./pages/admin/KelolaGaleri";
 import KelolaKategori from "./pages/admin/KelolaKategori";
+import Pengaturan from "./pages/admin/Pengaturan";
+
 
 export default function App() {
   return (
@@ -36,29 +65,128 @@ export default function App() {
               <KegiatanProvider>
                 <GaleriProvider>
                   <KategoriProvider>
+
                     <BrowserRouter>
+
                       <Routes>
-                        {/* Halaman publik */}
-                        <Route path="/" element={<Beranda />} />
-                        <Route path="/kambing" element={<Kambing />} />
-                        <Route path="/ayam" element={<Ayam />} />
-                        <Route path="/maggot" element={<Maggot />} />
-                        <Route path="/tentang" element={<TentangKami />} />
-                        <Route path="/lacak-ternak" element={<LacakTernak />} />
 
-                        {/* Auth admin */}
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/login" element={<Login />} />
+                        {/* ==================================================
+                            PUBLIC WEBSITE
+                        ================================================== */}
 
-                        {/* Dashboard admin (terproteksi) */}
+                        <Route
+                          path="/"
+                          element={<Beranda />}
+                        />
+
+                        <Route
+                          path="/katalog"
+                          element={<Katalog />}
+                        />
+
+                        <Route
+                          path="/produk/:id"
+                          element={<DetailProduk />}
+                        />
+
+                        <Route
+                          path="/titip-ternak"
+                          element={<TitipTernak />}
+                        />
+
+                        <Route
+                          path="/lacak-ternak"
+                          element={<LacakTernak />}
+                        />
+
+                        <Route
+                          path="/tentang"
+                          element={<TentangKami />}
+                        />
+
+
+                        {/* ==================================================
+                            URL LAMA
+                            
+                            Tetap diarahkan ke katalog agar link lama
+                            tidak menghasilkan halaman 404.
+                        ================================================== */}
+
+                        <Route
+                          path="/kambing"
+                          element={
+                            <Navigate
+                              to="/katalog"
+                              replace
+                            />
+                          }
+                        />
+
+                        <Route
+                          path="/ayam"
+                          element={
+                            <Navigate
+                              to="/katalog"
+                              replace
+                            />
+                          }
+                        />
+
+                        <Route
+                          path="/maggot"
+                          element={
+                            <Navigate
+                              to="/katalog"
+                              replace
+                            />
+                          }
+                        />
+
+
+                        {/* ==================================================
+                            AUTH
+                        ================================================== */}
+
+                        <Route
+                          path="/register"
+                          element={<Register />}
+                        />
+
+                        <Route
+                          path="/login"
+                          element={<Login />}
+                        />
+
+
+                        {/* ==================================================
+                            ADMIN
+                        ================================================== */}
+
+                        {/* Dashboard */}
+
+                        <Route
+                          path="/admin"
+                          element={
+                            <Navigate
+                              to="/admin/dashboard"
+                              replace
+                            />
+                          }
+                        />
+
                         <Route
                           path="/admin/dashboard"
                           element={
                             <PrivateRoute>
-                              <Dashboard />
+                              <AdminLayout>
+                                <Dashboard />
+                              </AdminLayout>
                             </PrivateRoute>
                           }
                         />
+
+
+                        {/* Produk */}
 
                         <Route
                           path="/admin/produk/:kategori"
@@ -69,6 +197,9 @@ export default function App() {
                           }
                         />
 
+
+                        {/* Produksi & Penjualan */}
+
                         <Route
                           path="/admin/produksi-penjualan"
                           element={
@@ -77,6 +208,9 @@ export default function App() {
                             </PrivateRoute>
                           }
                         />
+
+
+                        {/* Ternak */}
 
                         <Route
                           path="/admin/ternak/:kategori"
@@ -87,6 +221,9 @@ export default function App() {
                           }
                         />
 
+
+                        {/* Gudang Pakan */}
+
                         <Route
                           path="/admin/gudang-pakan"
                           element={
@@ -95,6 +232,9 @@ export default function App() {
                             </PrivateRoute>
                           }
                         />
+
+
+                        {/* Riwayat Aktivitas */}
 
                         <Route
                           path="/admin/riwayat-aktivitas"
@@ -105,6 +245,9 @@ export default function App() {
                           }
                         />
 
+
+                        {/* Kegiatan */}
+
                         <Route
                           path="/admin/kegiatan"
                           element={
@@ -113,6 +256,9 @@ export default function App() {
                             </PrivateRoute>
                           }
                         />
+
+
+                        {/* Galeri */}
 
                         <Route
                           path="/admin/galeri"
@@ -123,6 +269,9 @@ export default function App() {
                           }
                         />
 
+
+                        {/* Kategori */}
+
                         <Route
                           path="/admin/kategori/:kategori"
                           element={
@@ -131,8 +280,35 @@ export default function App() {
                             </PrivateRoute>
                           }
                         />
+
+                        <Route
+                          path="/admin/pengaturan"
+                          element={
+                            <PrivateRoute>
+                              <Pengaturan />
+                            </PrivateRoute>
+                          }
+                        />
+
+
+                        {/* ==================================================
+                            FALLBACK
+                        ================================================== */}
+
+                        <Route
+                          path="*"
+                          element={
+                            <Navigate
+                              to="/"
+                              replace
+                            />
+                          }
+                        />
+
                       </Routes>
+
                     </BrowserRouter>
+
                   </KategoriProvider>
                 </GaleriProvider>
               </KegiatanProvider>

@@ -1,50 +1,113 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Leaf,
+  Users,
   ShieldCheck,
-  Recycle,
+  Search,
+  MessageCircle,
+  Calendar,
+  Award,
+  HeartHandshake,
+  Sparkles,
 } from "lucide-react";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import CTABanner from "../components/CTABanner";
-import SectionHeading from "../components/SectionHeading";
 
 import pertaminaLogo from "../assets/pertamina-logo.png";
 import heroImage from "../assets/hero-kambing.jpeg";
-import pertaminaBackground from "../assets/fuel-terminal.jpeg";
+
+import { useProduk } from "../context/ProdukContext";
+import { useKegiatan } from "../context/KegiatanContext";
 
 const WA_NUMBER = "6281270958582";
 
-const categories = [
-  {
-    title: "Kambing",
-    description:
-      "Kambing perah dan kambing gemuk untuk kebutuhan harian, qurban, aqiqah, dan titip ternak.",
-    emoji: "🐐",
-    link: "/kambing",
-    color: "secondary",
-  },
-  {
-    title: "Ayam",
-    description:
-      "Ayam kampung yang dipelihara dengan baik serta produk pupuk organik dari kandang.",
-    emoji: "🐔",
-    link: "/ayam",
-    color: "primary",
-  },
-  {
-    title: "Maggot",
-    description:
-      "Maggot sebagai alternatif pakan ternak yang ekonomis dan mendukung ekonomi sirkular.",
-    emoji: "🪱",
-    link: "/maggot",
-    color: "accent",
-  },
+const FILTERS = [
+  "Semua",
+  "Kambing",
+  "Ayam",
+  "Maggot",
+  "Pupuk",
+  "Susu",
 ];
 
+const CATEGORY_EMOJI = {
+  Kambing: "🐐",
+  Ayam: "🐔",
+  Maggot: "🪱",
+};
+
+/* ============================================================
+   BUILD PRODUCT LIST
+============================================================ */
+
+function buildProductList(data) {
+  if (!data) return [];
+
+  const list = [];
+
+  const push = (items, kategori, defaultTipe) => {
+    (items || []).forEach((product) => {
+      const nama = product.nama || "";
+      const namaLower = nama.toLowerCase();
+
+      let tipe = defaultTipe;
+
+      if (namaLower.includes("susu")) {
+        tipe = "Susu";
+      } else if (namaLower.includes("pupuk")) {
+        tipe = "Pupuk";
+      }
+
+      list.push({
+        ...product,
+        kategori,
+        tipe,
+        link: `/${kategori.toLowerCase()}`,
+      });
+    });
+  };
+
+  push(data.kambingSusuPupuk, "Kambing", "Kambing");
+  push(data.kambingQurban, "Kambing", "Kambing");
+  push(data.ayamJual, "Ayam", "Ayam");
+  push(data.ayamPupuk, "Ayam", "Pupuk");
+  push(data.maggotProduk, "Maggot", "Maggot");
+
+  return list;
+}
+
+/* ============================================================
+   BERANDA
+============================================================ */
+
 export default function Beranda() {
+  const { data } = useProduk();
+  const { kegiatan } = useKegiatan();
+
+  const [filter, setFilter] = useState("Semua");
+
+  const allProducts = buildProductList(data);
+
+  const filteredProducts =
+    filter === "Semua"
+      ? allProducts
+      : allProducts.filter(
+          (product) =>
+            product.kategori === filter ||
+            product.tipe === filter
+        );
+
+  const shownProducts = filteredProducts.slice(0, 4);
+
+  const latestKegiatan = (kegiatan || []).slice(0, 3);
+
+  /* ==========================================================
+     WHATSAPP
+  ========================================================== */
+
   const whatsappLink =
     `https://wa.me/${WA_NUMBER}?text=` +
     encodeURIComponent(
@@ -53,210 +116,793 @@ export default function Beranda() {
 
   return (
     <div className="min-h-screen bg-cream">
-
-      {/* ================= NAVBAR ================= */}
       <Navbar />
 
-      {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden">
+      <main>
+        {/* =====================================================
+            HERO
+        ====================================================== */}
 
-        {/* BACKGROUND FOTO PERTAMINA (sangat tipis, cuma tekstur) */}
-        <div className="absolute inset-0 overflow-hidden">
-          <img
-            src={pertaminaBackground}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.10] blur-[1px] scale-105"
-          />
-          <div className="absolute inset-0 bg-white/70" />
-          <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-secondary-light/80 to-white/95" />
-        </div>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 sm:pt-4">
+          <div className="relative overflow-hidden rounded-[18px] sm:rounded-[22px] min-h-[430px] sm:min-h-[500px] lg:min-h-[530px]">
 
-        {/* DEKORASI — cuma 1 lingkaran, bukan 2 */}
-        <div className="absolute -right-40 -top-40 w-96 h-96 rounded-full bg-secondary/10" />
+            {/* Background */}
+            <img
+              src={heroImage}
+              alt="Peternakan Juragan Kambing Sei Siak"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
 
-        {/* ================= CONTENT ================= */}
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-20 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
 
-            {/* LEFT CONTENT */}
-            <div>
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-white/95 border border-line shadow-sm px-4 py-2 rounded-full backdrop-blur-sm">
-                <Leaf size={15} className="text-accent-dark" />
-                <span className="text-xs sm:text-sm font-semibold text-ink">
-                  UMKM Binaan Fuel Terminal Sei Siak
-                </span>
-              </div>
+            {/* Mobile overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent sm:hidden" />
 
-              {/* Judul — sekarang cuma 2 warna: ink (netral) + merah (aksen) */}
-              <h1 className="mt-6 font-heading font-extrabold text-5xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-tight text-ink">
-                Ternak Berkualitas,
-                <br />
-                <span className="text-primary">Berkelanjutan.</span>
-              </h1>
+            {/* Hero Content */}
+            <div className="relative z-10 flex items-center min-h-[430px] sm:min-h-[500px] lg:min-h-[530px]">
+              <div className="px-6 py-12 sm:px-10 lg:px-14 max-w-[680px]">
 
-              {/* Deskripsi */}
-              <p className="mt-6 text-base sm:text-lg text-muted max-w-xl leading-relaxed">
-                Juragan Kambing Sei Siak menghadirkan
-                kambing, ayam kampung, dan maggot
-                berkualitas sebagai bagian dari
-                pengembangan UMKM bersama Pertamina
-                Patra Niaga Fuel Terminal Sei Siak.
-              </p>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-7 h-[2px] rounded-full bg-primary" />
 
-              {/* Tombol */}
-              <div className="flex flex-wrap gap-3 mt-8">
-                <Link
-                  to="/kambing"
-                  className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3.5 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 shadow-md"
-                >
-                  Jelajahi Produk
-                  <ArrowRight size={17} />
-                </Link>
+                  <span className="text-[9px] sm:text-xs font-semibold text-white/90 uppercase tracking-wider">
+                    UMKM Binaan Fuel Terminal Sei Siak
+                  </span>
+                </div>
 
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 bg-white hover:bg-secondary-light text-secondary border border-secondary/20 px-6 py-3.5 rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 shadow-sm"
-                >
-                  Hubungi Kami
-                </a>
-              </div>
+                <h1 className="font-heading font-extrabold text-white text-[30px] leading-[1.08] sm:text-5xl lg:text-[52px] lg:leading-[1.08]">
+                  Dari Sei Siak,
+                  <br />
+                  untuk Peternakan
+                  <br />
+                  yang Lebih
+                  <br className="hidden sm:block" />
+                  Berkelanjutan
+                </h1>
 
-              {/* BRAND */}
-              <div className="mt-8 flex items-center gap-4">
-                <img src={pertaminaLogo} alt="Pertamina Patra Niaga" className="h-10 w-auto" />
-                <div className="h-8 w-px bg-line" />
-                <div>
-                  <p className="text-xs font-bold text-ink">Energizing Sustainable Future</p>
-                  <p className="text-[10px] text-muted">Fuel Terminal Sei Siak</p>
+                <p className="mt-5 text-sm sm:text-base text-white/85 leading-relaxed max-w-[510px]">
+                  Menyediakan produk peternakan dan layanan titip ternak
+                  yang dikelola secara bertanggung jawab oleh UMKM binaan
+                  Fuel Terminal Sei Siak.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex flex-wrap items-center gap-3 mt-7">
+
+                  {/* Lihat Produk */}
+                  <Link
+                    to="/kambing"
+                    className="
+                      inline-flex
+                      items-center
+                      justify-center
+                      gap-2
+                      bg-secondary
+                      hover:bg-secondary-dark
+                      text-white
+                      px-5
+                      sm:px-6
+                      py-2.5
+                      sm:py-3
+                      rounded-full
+                      font-bold
+                      text-xs
+                      sm:text-sm
+                      shadow-lg
+                      transition-all
+                      hover:-translate-y-0.5
+                    "
+                  >
+                    Lihat Produk
+                    <ArrowRight size={15} />
+                  </Link>
+
+                  {/* Titip Ternak */}
+                  <Link
+                    to="/titip-ternak"
+                    className="
+                      inline-flex
+                      items-center
+                      justify-center
+                      gap-2
+                      bg-white/10
+                      hover:bg-white/20
+                      border
+                      border-white/70
+                      text-white
+                      px-5
+                      sm:px-6
+                      py-2.5
+                      sm:py-3
+                      rounded-full
+                      font-bold
+                      text-xs
+                      sm:text-sm
+                      backdrop-blur-sm
+                      transition-all
+                    "
+                  >
+                    Titip Ternak
+                  </Link>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT - FOTO KAMBING */}
-            <div className="relative">
-              <div className="relative rounded-[32px] overflow-hidden bg-white shadow-card border border-white min-h-[420px]">
+            {/* Pertamina Badge */}
+            <div
+              className="
+                absolute
+                z-20
+                right-4
+                bottom-4
+                sm:right-6
+                sm:bottom-6
+                bg-white
+                rounded-xl
+                sm:rounded-2xl
+                px-3
+                sm:px-4
+                py-2.5
+                sm:py-3
+                shadow-xl
+                flex
+                items-center
+                gap-2.5
+                max-w-[210px]
+              "
+            >
+              <img
+                src={pertaminaLogo}
+                alt="Pertamina Patra Niaga"
+                className="h-6 sm:h-7 w-auto"
+              />
 
-                {/* STRIPE PERTAMINA — satu-satunya penanda brand di foto ini */}
-                <div className="absolute top-0 left-0 right-0 h-2 flex z-20">
-                  <div className="flex-1 bg-primary" />
-                  <div className="flex-1 bg-secondary" />
-                  <div className="flex-1 bg-accent" />
-                </div>
+              <div className="leading-tight">
+                <p className="text-[8px] sm:text-[9px] text-muted">
+                  Didukung oleh
+                </p>
 
-                {/* FOTO KAMBING */}
-                <div className="absolute inset-0 bg-secondary-light">
-                  <img
-                    src={heroImage}
-                    alt="Juragan Kambing Sei Siak"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                </div>
+                <p className="text-[9px] sm:text-[10px] font-bold text-ink">
+                  Pertamina Patra Niaga
+                </p>
 
-                {/* Overlay foto */}
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-
-                {/* TEXT FOTO — satu-satunya lapisan pesan di foto */}
-                <div className="absolute bottom-0 left-0 right-0 p-7">
-                  <p className="text-white text-2xl font-heading font-extrabold">
-                    Dari kandang,
-                    <br />
-                    untuk masa depan.
-                  </p>
-                </div>
+                <p className="text-[8px] sm:text-[9px] text-muted">
+                  Fuel Terminal Sei Siak
+                </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            KEUNGGULAN
+        ====================================================== */}
+
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+
+            <FeatureCard
+              icon={ShieldCheck}
+              title="Ternak Terawat"
+              subtitle="& Sehat"
+            />
+
+            <FeatureCard
+              icon={Users}
+              title="Dikelola Peternak"
+              subtitle="Lokal"
+            />
+
+            <FeatureCard
+              icon={Leaf}
+              title="Produk Berkualitas"
+              subtitle="& Halal"
+            />
+
+            <FeatureCard
+              icon={Search}
+              title="Bisa Lacak Ternak"
+              subtitle="Secara Online"
+            />
 
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ================= BENEFITS ================= */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 -mt-1 relative z-10">
-        <div className="bg-white rounded-3xl border border-line shadow-card p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Benefit icon={ShieldCheck} title="Kualitas Terjaga" text="Produk dirawat dan diproses dengan baik." color="primary" />
-          <Benefit icon={Leaf} title="Ramah Lingkungan" text="Mendukung praktik usaha yang berkelanjutan." color="accent" />
-          <Benefit icon={Recycle} title="Ekonomi Sirkular" text="Mengolah potensi lokal menjadi bernilai." color="secondary" />
-          <Benefit icon={ArrowRight} title="Mudah Dipesan" text="Konsultasi dan pemesanan melalui WhatsApp." color="primary" />
-        </div>
-      </section>
+        {/* =====================================================
+            PRODUK UNGGULAN
+        ====================================================== */}
 
-      {/* ================= PRODUK ================= */}
-      <section id="produk" className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-9 sm:mt-12">
+
           <SectionHeading
-            blueWord="Produk"
-            redWord="Unggulan"
-            subtitle="Beragam produk dari Juragan Kambing Sei Siak untuk kebutuhan Anda."
+            title="Produk Unggulan"
+            subtitle="Pilihan produk peternakan dari Sei Siak untuk kebutuhan Anda."
           />
-          <Link to="/kambing" className="inline-flex items-center gap-2 text-sm font-bold text-secondary hover:text-primary">
-            Lihat semua produk
-            <ArrowRight size={16} />
-          </Link>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {categories.map((item) => (
-            <CategoryCard key={item.title} item={item} />
-          ))}
-        </div>
-      </section>
+          {/* Filter */}
+          <div className="flex items-center gap-2 overflow-x-auto mt-5 pb-1">
+            {FILTERS.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setFilter(item)}
+                className={`
+                  shrink-0
+                  px-4
+                  sm:px-5
+                  py-2
+                  rounded-full
+                  text-[11px]
+                  sm:text-xs
+                  font-semibold
+                  border
+                  transition-all
+                  ${
+                    filter === item
+                      ? "bg-primary border-primary text-white shadow-sm"
+                      : "bg-white border-line text-muted hover:border-primary hover:text-primary"
+                  }
+                `}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
 
-      {/* ================= CTA ================= */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-20">
-        <CTABanner />
-      </section>
+          {/* Product Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-5">
 
-      {/* ================= FOOTER ================= */}
+            {shownProducts.length === 0 ? (
+              <div className="col-span-full bg-white border border-line rounded-2xl p-8 text-center">
+                <p className="text-sm text-muted">
+                  Belum ada produk untuk kategori ini.
+                </p>
+              </div>
+            ) : (
+              shownProducts.map((product) => (
+                <ProductCard
+                  key={`${product.kategori}-${product.id}`}
+                  product={product}
+                />
+              ))
+            )}
+
+          </div>
+        </section>
+
+        {/* =====================================================
+            KENAPA MEMILIH KAMI
+        ====================================================== */}
+
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-12">
+
+          <SectionHeading title="Kenapa Memilih Kami?" />
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-5">
+
+            <WhyCard
+              icon={HeartHandshake}
+              title="Peternakan Lokal"
+            />
+
+            <WhyCard
+              icon={ShieldCheck}
+              title="Ternak Sehat"
+            />
+
+            <WhyCard
+              icon={Award}
+              title="Produk Berkualitas"
+            />
+
+            <WhyCard
+              icon={Sparkles}
+              title="Pelayanan Terbaik"
+            />
+
+          </div>
+        </section>
+
+        {/* =====================================================
+            TITIP TERNAK
+        ====================================================== */}
+
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-12">
+
+          <div className="relative overflow-hidden rounded-[18px] sm:rounded-[22px] min-h-[190px] sm:min-h-[220px]">
+
+            <img
+              src={heroImage}
+              alt="Titip ternak Juragan Kambing"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-r from-[#143528]/95 via-[#143528]/75 to-[#143528]/20" />
+
+            <div className="relative z-10 min-h-[190px] sm:min-h-[220px] flex items-center">
+
+              <div className="px-6 sm:px-10 lg:px-12">
+
+                <div className="border-l-[3px] border-primary pl-4 sm:pl-5">
+
+                  <p className="text-[9px] sm:text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+                    Layanan Titip Ternak
+                  </p>
+
+                  <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-bold text-white leading-tight">
+                    Titip Ternak Lebih Mudah
+                    <br />
+                    Pantau Perkembangan Lewat Website
+                  </h2>
+
+                  {/* Mulai Sekarang */}
+                  <Link
+                    to="/titip-ternak"
+                    className="
+                      inline-flex
+                      items-center
+                      gap-2
+                      mt-4
+                      bg-primary
+                      hover:bg-primary-dark
+                      text-white
+                      px-4
+                      sm:px-5
+                      py-2
+                      sm:py-2.5
+                      rounded-full
+                      text-[10px]
+                      sm:text-xs
+                      font-bold
+                      transition-all
+                      hover:-translate-y-0.5
+                    "
+                  >
+                    Mulai Sekarang
+                    <ArrowRight size={13} />
+                  </Link>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            KEGIATAN TERBARU
+        ====================================================== */}
+
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-12 pb-10">
+
+          <div className="flex items-end justify-between gap-4">
+
+            <SectionHeading
+              title="Kegiatan Terbaru"
+              subtitle="Aktivitas dan perkembangan terbaru Juragan Kambing Sei Siak."
+            />
+
+            <Link
+              to="/tentang"
+              className="
+                shrink-0
+                inline-flex
+                items-center
+                gap-1
+                text-[10px]
+                sm:text-xs
+                font-semibold
+                text-primary
+                hover:text-primary-dark
+              "
+            >
+              Lihat Semua
+              <ArrowRight size={13} />
+            </Link>
+
+          </div>
+
+          {latestKegiatan.length === 0 ? (
+            <div className="mt-5 bg-white border border-line rounded-2xl p-8 text-center">
+
+              <Calendar
+                size={28}
+                className="mx-auto text-muted mb-2"
+              />
+
+              <p className="text-sm text-muted">
+                Belum ada kegiatan yang ditambahkan.
+              </p>
+
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-5">
+
+              {latestKegiatan.map((item) => (
+                <ActivityCard
+                  key={item.id}
+                  item={item}
+                />
+              ))}
+
+            </div>
+          )}
+
+        </section>
+      </main>
+
       <Footer />
     </div>
   );
 }
 
-function Benefit({ icon: Icon, title, text, color }) {
-  const colors = {
-    primary: "bg-primary-light text-primary",
-    secondary: "bg-secondary-light text-secondary",
-    accent: "bg-accent-light text-accent-dark",
-  };
+/* ============================================================
+   SECTION HEADING
+============================================================ */
 
+function SectionHeading({ title, subtitle }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl">
-      <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${colors[color]}`}>
-        <Icon size={19} />
+    <div>
+      <h2 className="font-heading text-lg sm:text-xl lg:text-2xl font-extrabold text-ink">
+        {title}
+      </h2>
+
+      {subtitle && (
+        <p className="mt-1 text-[10px] sm:text-xs text-muted max-w-xl">
+          {subtitle}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   FEATURE CARD
+============================================================ */
+
+function FeatureCard({ icon: Icon, title, subtitle }) {
+  return (
+    <div
+      className="
+        bg-white
+        border
+        border-line
+        rounded-xl
+        sm:rounded-2xl
+        px-3
+        sm:px-4
+        py-3
+        sm:py-3.5
+        flex
+        items-center
+        gap-2.5
+        sm:gap-3
+        min-h-[65px]
+      "
+    >
+      <div
+        className="
+          w-8
+          h-8
+          sm:w-9
+          sm:h-9
+          rounded-full
+          bg-primary-tint
+          text-primary
+          flex
+          items-center
+          justify-center
+          shrink-0
+        "
+      >
+        <Icon size={15} />
       </div>
-      <div>
-        <p className="text-sm font-bold text-ink">{title}</p>
-        <p className="text-xs text-muted mt-0.5">{text}</p>
+
+      <div className="leading-tight">
+        <p className="text-[9px] sm:text-[10px] font-bold text-ink">
+          {title}
+        </p>
+
+        <p className="text-[9px] sm:text-[10px] text-muted mt-0.5">
+          {subtitle}
+        </p>
       </div>
     </div>
   );
 }
 
-function CategoryCard({ item }) {
-  const colorMap = {
-    primary: "bg-primary-light text-primary",
-    secondary: "bg-secondary-light text-secondary",
-    accent: "bg-accent-light text-accent-dark",
-  };
+/* ============================================================
+   WHY CARD
+============================================================ */
 
+function WhyCard({ icon: Icon, title }) {
   return (
-    <Link
-      to={item.link}
-      className="group bg-white rounded-3xl border border-line shadow-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+    <div
+      className="
+        bg-white
+        border
+        border-line
+        rounded-xl
+        sm:rounded-2xl
+        px-3
+        sm:px-4
+        py-3
+        flex
+        items-center
+        gap-2.5
+        sm:gap-3
+      "
     >
-      <div className="flex items-start justify-between">
-        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-4xl ${colorMap[item.color]}`}>
-          {item.emoji}
-        </div>
-        <ArrowRight size={20} className="text-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
+      <div
+        className="
+          w-8
+          h-8
+          sm:w-9
+          sm:h-9
+          rounded-full
+          bg-primary-tint
+          text-primary
+          flex
+          items-center
+          justify-center
+          shrink-0
+        "
+      >
+        <Icon size={15} />
       </div>
 
-      <h3 className="mt-6 text-xl font-heading font-extrabold text-ink">{item.title}</h3>
-      <p className="mt-2 text-sm text-muted leading-relaxed">{item.description}</p>
-      <div className="mt-5 text-sm font-bold text-secondary">Lihat produk →</div>
-    </Link>
+      <span className="text-[10px] sm:text-xs font-semibold text-ink">
+        {title}
+      </span>
+    </div>
+  );
+}
+
+/* ============================================================
+   PRODUCT CARD
+============================================================ */
+
+function ProductCard({ product }) {
+  const productName = product.nama || "Produk";
+
+  const productImage =
+    product.image ||
+    product.image_url ||
+    product.gambar ||
+    "";
+
+  const productDescription =
+    product.deskripsi ||
+    product.description ||
+    "Produk peternakan pilihan.";
+
+  const productPrice =
+    product.harga ||
+    product.price ||
+    "Hubungi kami";
+
+  const whatsappMessage =
+    `Halo, saya ingin bertanya tentang ${productName}.`;
+
+  const productWhatsapp =
+    `https://wa.me/${WA_NUMBER}?text=` +
+    encodeURIComponent(whatsappMessage);
+
+  return (
+    <article
+      className="
+        group
+        overflow-hidden
+        bg-white
+        border
+        border-line
+        rounded-xl
+        sm:rounded-2xl
+        shadow-card
+        hover:shadow-soft
+        transition-all
+        duration-300
+        hover:-translate-y-1
+      "
+    >
+      {/* Image */}
+      <Link to={product.link}>
+        <div className="relative h-[125px] sm:h-[155px] bg-cream overflow-hidden">
+
+          {productImage ? (
+            <img
+              src={productImage}
+              alt={productName}
+              className="
+                w-full
+                h-full
+                object-cover
+                group-hover:scale-105
+                transition-transform
+                duration-500
+              "
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-4xl bg-primary-tint">
+              {CATEGORY_EMOJI[product.kategori] || "📦"}
+            </div>
+          )}
+
+          {/* Category */}
+          <span
+            className="
+              absolute
+              top-2
+              left-2
+              bg-white/95
+              backdrop-blur-sm
+              text-primary
+              text-[8px]
+              sm:text-[9px]
+              font-bold
+              px-2
+              py-1
+              rounded-full
+            "
+          >
+            {product.tipe || product.kategori}
+          </span>
+
+        </div>
+      </Link>
+
+      {/* Content */}
+      <div className="p-2.5 sm:p-3">
+
+        <Link to={product.link}>
+          <h3 className="font-heading text-[11px] sm:text-sm font-bold text-ink line-clamp-1 hover:text-primary transition-colors">
+            {productName}
+          </h3>
+        </Link>
+
+        <p className="text-[9px] sm:text-[10px] text-muted mt-1 line-clamp-1">
+          {productDescription}
+        </p>
+
+        <p className="text-secondary font-extrabold text-[11px] sm:text-sm mt-1.5">
+          {productPrice}
+        </p>
+
+        <div className="flex items-center gap-1.5 mt-2.5">
+
+          <Link
+            to={product.link}
+            className="
+              flex-1
+              text-center
+              bg-primary
+              hover:bg-primary-dark
+              text-white
+              text-[9px]
+              sm:text-[10px]
+              font-bold
+              py-1.5
+              sm:py-2
+              rounded-lg
+              transition-colors
+            "
+          >
+            Detail
+          </Link>
+
+          <a
+            href={productWhatsapp}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Pesan ${productName} melalui WhatsApp`}
+            className="
+              w-7
+              h-7
+              sm:w-8
+              sm:h-8
+              rounded-lg
+              bg-primary-tint
+              text-primary
+              flex
+              items-center
+              justify-center
+              shrink-0
+              hover:bg-primary
+              hover:text-white
+              transition-colors
+            "
+          >
+            <MessageCircle size={13} />
+          </a>
+
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ============================================================
+   ACTIVITY CARD
+============================================================ */
+
+function ActivityCard({ item }) {
+  const title =
+    item.title ||
+    item.judul ||
+    item.nama ||
+    "Kegiatan Juragan Kambing";
+
+  const image =
+    item.image_url ||
+    item.gambar_url ||
+    item.image ||
+    item.gambar ||
+    "";
+
+  const date =
+    item.activity_date ||
+    item.tanggal ||
+    item.created_at ||
+    "";
+
+  let formattedDate = "Tanggal tidak tersedia";
+
+  if (date) {
+    const parsedDate = new Date(date);
+
+    if (!Number.isNaN(parsedDate.getTime())) {
+      formattedDate = parsedDate.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    }
+  }
+
+  return (
+    <article
+      className="
+        overflow-hidden
+        bg-white
+        border
+        border-line
+        rounded-xl
+        sm:rounded-2xl
+        shadow-card
+        hover:shadow-soft
+        transition-all
+        duration-300
+        hover:-translate-y-1
+      "
+    >
+      <div className="h-[155px] sm:h-[170px] bg-cream">
+
+        {image ? (
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-primary-tint text-primary">
+            <Calendar size={30} />
+          </div>
+        )}
+
+      </div>
+
+      <div className="p-3.5 sm:p-4">
+
+        <h3 className="font-heading text-xs sm:text-sm font-bold text-ink leading-snug line-clamp-2">
+          {title}
+        </h3>
+
+        <div className="flex items-center gap-1.5 mt-2 text-[9px] sm:text-[10px] text-muted">
+          <Calendar size={11} />
+          <span>{formattedDate}</span>
+        </div>
+
+      </div>
+    </article>
   );
 }

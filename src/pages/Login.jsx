@@ -51,7 +51,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f6fa] flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-[#f3f9f5] flex items-center justify-center p-4 sm:p-6">
 
       <div className="w-full max-w-5xl">
 
@@ -64,12 +64,12 @@ export default function Login() {
             {/* BAGIAN KIRI - BRANDING */}
             {/* ================================================= */}
 
-            <div className="hidden lg:flex relative bg-[#0072bc] min-h-[620px] overflow-hidden">
+            <div className="hidden lg:flex relative bg-[#1A5D3A] min-h-[620px] overflow-hidden">
 
               {/* Background decoration */}
-              <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#ed1c24] rounded-full opacity-95" />
+              <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#0F4229] rounded-full opacity-95" />
 
-              <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-[#7ac143] rounded-full opacity-90" />
+              <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-[#8DC63F] rounded-full opacity-90" />
 
               <div className="absolute top-1/2 -right-24 w-44 h-44 border-[28px] border-white/10 rounded-full" />
 
@@ -85,11 +85,11 @@ export default function Login() {
 
                       <div className="relative w-8 h-8">
 
-                        <div className="absolute left-0 top-3 w-7 h-4 bg-[#0072bc] -skew-x-12 rounded-sm" />
+                        <div className="absolute left-0 top-3 w-7 h-4 bg-[#1A5D3A] -skew-x-12 rounded-sm" />
 
-                        <div className="absolute right-0 top-0 w-5 h-4 bg-[#ed1c24] -skew-x-12 rounded-sm" />
+                        <div className="absolute right-0 top-0 w-5 h-4 bg-[#2F704A] -skew-x-12 rounded-sm" />
 
-                        <div className="absolute right-0 bottom-0 w-5 h-4 bg-[#7ac143] -skew-x-12 rounded-sm" />
+                        <div className="absolute right-0 bottom-0 w-5 h-4 bg-[#8DC63F] -skew-x-12 rounded-sm" />
 
                       </div>
 
@@ -97,11 +97,11 @@ export default function Login() {
 
                     <div>
                       <p className="text-white font-extrabold text-xl tracking-tight">
-                        PERTAMINA
+                        JURAGAN KAMBING
                       </p>
 
                       <p className="text-white font-bold text-sm tracking-wide">
-                        PATRA NIAGA
+                        SEI SIAK
                       </p>
                     </div>
 
@@ -117,7 +117,7 @@ export default function Login() {
 
                     <Building2 size={15} />
 
-                    FUEL TERMINAL SEI SIAK
+                    UMKM BINAAN FUEL TERMINAL SEI SIAK
 
                   </div>
 
@@ -126,7 +126,7 @@ export default function Login() {
                     Sistem Informasi
                     <br />
 
-                    <span className="text-[#9bdc4b]">
+                    <span className="text-[#C4E88A]">
                       Juragan Kambing
                     </span>
 
@@ -149,7 +149,7 @@ export default function Login() {
                   <div className="w-16 h-1 bg-white/80 rounded-full mb-4" />
 
                   <p className="text-white/60 text-xs">
-                    UMKM Binaan Pertamina Patra Niaga
+                    Didukung oleh Pertamina Patra Niaga
                   </p>
 
                   <p className="text-white/50 text-xs mt-1">
@@ -176,10 +176,10 @@ export default function Login() {
 
                   <div className="flex items-center gap-3">
 
-                    <div className="w-11 h-11 rounded-xl bg-[#0072bc] flex items-center justify-center">
+                    <div className="w-11 h-11 rounded-xl bg-[#1A5D3A] flex items-center justify-center">
 
                       <span className="text-white font-black text-sm">
-                        PN
+                        JK
                       </span>
 
                     </div>
@@ -187,7 +187,7 @@ export default function Login() {
                     <div>
 
                       <p className="font-extrabold text-[#1e293b]">
-                        PERTAMINA PATRA NIAGA
+                        JURAGAN KAMBING SEI SIAK
                       </p>
 
                       <p className="text-xs text-slate-500">
@@ -204,16 +204,16 @@ export default function Login() {
                 {/* HEADER LOGIN */}
                 <div className="mb-8">
 
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-[#E5F0EA] flex items-center justify-center mb-5">
 
                     <ShieldCheck
                       size={25}
-                      className="text-[#0072bc]"
+                      className="text-[#1A5D3A]"
                     />
 
                   </div>
 
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#0072bc] mb-2">
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#1A5D3A] mb-2">
                     Admin Panel
                   </p>
 
@@ -283,9 +283,9 @@ export default function Login() {
                           outline-none
                           transition
                           focus:bg-white
-                          focus:border-[#0072bc]
+                          focus:border-[#1A5D3A]
                           focus:ring-4
-                          focus:ring-blue-100
+                          focus:ring-[#E5F0EA]
                         "
                       />
 
@@ -333,9 +333,9 @@ export default function Login() {
                           outline-none
                           transition
                           focus:bg-white
-                          focus:border-[#0072bc]
+                          focus:border-[#1A5D3A]
                           focus:ring-4
-                          focus:ring-blue-100
+                          focus:ring-[#E5F0EA]
                         "
                       />
 
@@ -380,8 +380,8 @@ export default function Login() {
                       w-full
                       h-12
                       rounded-xl
-                      bg-[#ed1c24]
-                      hover:bg-[#d71920]
+                      bg-[#1A5D3A]
+                      hover:bg-[#0F4229]
                       text-white
                       font-bold
                       text-sm
@@ -390,7 +390,7 @@ export default function Login() {
                       justify-center
                       gap-2
                       shadow-lg
-                      shadow-red-200
+                      shadow-[#1A5D3A]/20
                       transition-all
                       hover:-translate-y-0.5
                       disabled:opacity-60
@@ -421,7 +421,7 @@ export default function Login() {
 
                     <Link
                       to="/register"
-                      className="font-bold text-[#0072bc] hover:text-[#005a94]"
+                      className="font-bold text-[#1A5D3A] hover:text-[#0F4229]"
                     >
                       Daftar sekarang
                     </Link>
