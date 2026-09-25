@@ -218,7 +218,7 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-2.5 ml-3">
 
               {/* ADMIN */}
-              {user && (
+              {user ? (
                 <Link
                   to="/admin/dashboard"
                   className="
@@ -241,6 +241,30 @@ export default function Navbar() {
                 >
                   <LayoutDashboard size={14} />
                   Admin
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="
+                    hidden
+                    xl:flex
+                    items-center
+                    gap-1.5
+                    px-3
+                    py-2
+                    rounded-full
+                    border
+                    border-line
+                    text-muted
+                    hover:text-primary
+                    hover:border-primary
+                    text-xs
+                    font-semibold
+                    transition-colors
+                  "
+                >
+                  <LayoutDashboard size={14} />
+                  Login Admin
                 </Link>
               )}
 
@@ -356,7 +380,7 @@ export default function Navbar() {
               {/* =================================================
                   MOBILE ADMIN
               ================================================== */}
-              {user && (
+              {user ? (
                 <Link
                   to="/admin/dashboard"
                   onClick={closeMenu}
@@ -383,6 +407,33 @@ export default function Navbar() {
                   <LayoutDashboard size={22} />
                   Dashboard Admin
                 </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="
+                    mt-4
+                    w-full
+                    min-h-[66px]
+                    flex
+                    items-center
+                    justify-center
+                    gap-3
+                    border
+                    border-line
+                    bg-white
+                    text-ink
+                    font-semibold
+                    text-[20px]
+                    rounded-2xl
+                    hover:border-primary
+                    hover:text-primary
+                    transition-colors
+                  "
+                >
+                  <LayoutDashboard size={22} />
+                  Login Admin
+                </Link>
               )}
 
               {/* =================================================
@@ -406,7 +457,7 @@ export default function Navbar() {
                   font-bold
                   text-[20px]
                   rounded-2xl
-                  transition-colors
+                  transition-all
                 "
               >
                 <MessageCircle size={24} />

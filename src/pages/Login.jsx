@@ -411,26 +411,6 @@ export default function Login() {
 
                 </form>
 
-
-                {/* REGISTER */}
-                <div className="mt-7 text-center">
-
-                  <p className="text-sm text-slate-500">
-
-                    Belum memiliki akun admin?{" "}
-
-                    <Link
-                      to="/register"
-                      className="font-bold text-[#1A5D3A] hover:text-[#0F4229]"
-                    >
-                      Daftar sekarang
-                    </Link>
-
-                  </p>
-
-                </div>
-
-
                 {/* INFO */}
                 <div className="mt-8 pt-6 border-t border-slate-100">
 

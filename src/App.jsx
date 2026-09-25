@@ -36,7 +36,6 @@ import TitipTernak from "./pages/TitipTernak";
 import LacakTernak from "./pages/LacakTernak";
 import TentangKami from "./pages/TentangKami";
 
-import Register from "./pages/Register";
 import Login from "./pages/Login";
 
 /* ============================================================
@@ -149,7 +148,12 @@ export default function App() {
 
                         <Route
                           path="/register"
-                          element={<Register />}
+                          element={
+                            <Navigate
+                              to="/login"
+                              replace
+                            />
+                          }
                         />
 
                         <Route
