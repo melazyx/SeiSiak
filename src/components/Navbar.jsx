@@ -53,41 +53,93 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-cream/95 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
-        <div className="bg-white border border-line rounded-2xl shadow-soft">
-          <div className="min-h-[68px] px-4 sm:px-5 lg:px-6 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="bg-white border border-line rounded-2xl shadow-soft overflow-hidden">
 
-            {/* =====================================================
-                BRAND
-            ====================================================== */}
-
+          {/* =====================================================
+              HEADER / BRAND
+          ====================================================== */}
+          <div
+            className="
+              min-h-[72px]
+              px-5
+              sm:px-6
+              lg:px-7
+              flex
+              items-center
+              justify-between
+              gap-4
+            "
+          >
+            {/* BRAND */}
             <Link
               to="/"
               onClick={closeMenu}
-              className="flex items-center gap-2.5 shrink-0"
+              className="flex items-center gap-3 shrink-0"
             >
-              {/* Logo */}
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-primary flex items-center justify-center shrink-0">
+              {/* LOGO */}
+              <div
+                className="
+                  w-12
+                  h-12
+                  sm:w-13
+                  sm:h-13
+                  rounded-full
+                  bg-primary
+                  flex
+                  items-center
+                  justify-center
+                  shrink-0
+                "
+              >
                 <PawPrint
-                  size={20}
+                  size={24}
                   strokeWidth={2.4}
                   className="text-white"
                 />
               </div>
 
-              {/* Nama */}
+              {/* NAMA BRAND */}
               <div className="leading-none">
-                <p className="text-[13px] sm:text-[14px] font-extrabold tracking-tight text-ink">
+                <p
+                  className="
+                    text-[17px]
+                    sm:text-[18px]
+                    font-extrabold
+                    tracking-tight
+                    text-ink
+                  "
+                >
                   JURAGAN KAMBING
                 </p>
 
-                <p className="mt-1 text-[9px] sm:text-[10px] font-bold tracking-[0.12em] text-primary">
+                <p
+                  className="
+                    mt-1
+                    text-[11px]
+                    sm:text-[12px]
+                    font-bold
+                    tracking-[0.14em]
+                    text-primary
+                  "
+                >
                   SEI SIAK
                 </p>
               </div>
 
-              {/* Pertamina */}
-              <div className="hidden 2xl:flex items-center gap-2 ml-3 pl-3 border-l border-line">
+              {/* PERTAMINA DESKTOP BESAR */}
+              <div
+                className="
+                  hidden
+                  2xl:flex
+                  items-center
+                  gap-2
+                  ml-3
+                  pl-3
+                  border-l
+                  border-line
+                "
+              >
                 <img
                   src={pertaminaLogo}
                   alt="Pertamina Patra Niaga"
@@ -109,7 +161,6 @@ export default function Navbar() {
             {/* =====================================================
                 DESKTOP NAVIGATION
             ====================================================== */}
-
             <nav className="hidden lg:flex items-center gap-4 xl:gap-6 ml-auto">
               {NAV_LINKS.map((item) => (
                 <NavLink
@@ -120,7 +171,8 @@ export default function Navbar() {
                     `
                     relative
                     py-2
-                    text-[11px] xl:text-[12px]
+                    text-[11px]
+                    xl:text-[12px]
                     font-semibold
                     whitespace-nowrap
                     transition-colors
@@ -163,15 +215,15 @@ export default function Navbar() {
             {/* =====================================================
                 DESKTOP ACTION
             ====================================================== */}
-
             <div className="hidden lg:flex items-center gap-2.5 ml-3">
 
-              {/* Admin */}
+              {/* ADMIN */}
               {user && (
                 <Link
                   to="/admin/dashboard"
                   className="
-                    hidden xl:flex
+                    hidden
+                    xl:flex
                     items-center
                     gap-1.5
                     px-3
@@ -192,7 +244,7 @@ export default function Navbar() {
                 </Link>
               )}
 
-              {/* WhatsApp */}
+              {/* WHATSAPP */}
               <a
                 href={whatsappLink}
                 target="_blank"
@@ -226,16 +278,15 @@ export default function Navbar() {
             {/* =====================================================
                 MOBILE BUTTON
             ====================================================== */}
-
             <button
               type="button"
               onClick={() => setOpen((value) => !value)}
               aria-label={open ? "Tutup menu" : "Buka menu"}
               className="
                 lg:hidden
-                w-10
-                h-10
-                rounded-xl
+                w-12
+                h-12
+                rounded-2xl
                 border
                 border-line
                 flex
@@ -248,9 +299,9 @@ export default function Navbar() {
               "
             >
               {open ? (
-                <X size={21} />
+                <X size={27} strokeWidth={2} />
               ) : (
-                <Menu size={21} />
+                <Menu size={27} strokeWidth={2} />
               )}
             </button>
           </div>
@@ -258,11 +309,19 @@ export default function Navbar() {
           {/* =====================================================
               MOBILE MENU
           ====================================================== */}
-
           {open && (
-            <div className="lg:hidden border-t border-line px-4 pb-4">
-
-              <nav className="flex flex-col pt-3 gap-1">
+            <div
+              className="
+                lg:hidden
+                border-t
+                border-line
+                px-5
+                pb-5
+                bg-white
+              "
+            >
+              {/* NAVIGATION */}
+              <nav className="flex flex-col pt-4 gap-1">
 
                 {NAV_LINKS.map((item) => (
                   <NavLink
@@ -274,10 +333,11 @@ export default function Navbar() {
                       `
                       flex
                       items-center
-                      px-4
-                      py-3
-                      rounded-xl
-                      text-sm
+                      px-6
+                      py-4
+                      rounded-2xl
+                      text-[20px]
+                      leading-none
                       font-semibold
                       transition-colors
                       ${
@@ -291,75 +351,106 @@ export default function Navbar() {
                     {item.label}
                   </NavLink>
                 ))}
-
               </nav>
 
-              {/* Mobile Admin */}
+              {/* =================================================
+                  MOBILE ADMIN
+              ================================================== */}
               {user && (
                 <Link
                   to="/admin/dashboard"
                   onClick={closeMenu}
                   className="
-                    mt-2
+                    mt-4
+                    w-full
+                    min-h-[66px]
                     flex
                     items-center
                     justify-center
-                    gap-2
+                    gap-3
                     border
                     border-line
+                    bg-white
                     text-ink
                     font-semibold
-                    text-sm
-                    py-3
-                    rounded-xl
+                    text-[20px]
+                    rounded-2xl
                     hover:border-primary
                     hover:text-primary
                     transition-colors
                   "
                 >
-                  <LayoutDashboard size={16} />
+                  <LayoutDashboard size={22} />
                   Dashboard Admin
                 </Link>
               )}
 
-              {/* Mobile WhatsApp */}
+              {/* =================================================
+                  MOBILE WHATSAPP
+              ================================================== */}
               <a
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 className="
-                  mt-2
+                  mt-3
+                  w-full
+                  min-h-[66px]
                   flex
                   items-center
                   justify-center
-                  gap-2
+                  gap-3
                   bg-secondary
                   hover:bg-secondary-dark
                   text-white
                   font-bold
-                  text-sm
-                  py-3
-                  rounded-xl
+                  text-[20px]
+                  rounded-2xl
                   transition-colors
                 "
               >
-                <MessageCircle size={17} />
+                <MessageCircle size={24} />
                 Hubungi Kami
               </a>
 
-              {/* Mobile Pertamina */}
-              <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-line">
+              {/* =================================================
+                  MOBILE PERTAMINA
+              ================================================== */}
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  gap-3
+                  mt-5
+                  pt-5
+                  border-t
+                  border-line
+                "
+              >
                 <img
                   src={pertaminaLogo}
                   alt="Pertamina Patra Niaga"
-                  className="h-5 w-auto opacity-75"
+                  className="
+                    h-7
+                    sm:h-8
+                    w-auto
+                    opacity-80
+                  "
                 />
 
-                <p className="text-[9px] text-muted uppercase tracking-wide">
+                <p
+                  className="
+                    text-[10px]
+                    sm:text-[11px]
+                    text-muted
+                    uppercase
+                    tracking-wide
+                  "
+                >
                   UMKM Binaan Fuel Terminal Sei Siak
                 </p>
               </div>
-
             </div>
           )}
         </div>

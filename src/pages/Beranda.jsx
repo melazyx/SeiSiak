@@ -141,7 +141,7 @@ export default function Beranda() {
 
             {/* Hero Content */}
             <div className="relative z-10 flex items-center min-h-[430px] sm:min-h-[500px] lg:min-h-[530px]">
-              <div className="px-6 py-12 sm:px-10 lg:px-14 max-w-[680px]">
+              <div className="px-6 py-12 pb-28 sm:px-10 sm:py-12 sm:pb-12 lg:px-14 max-w-[680px]">
 
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-7 h-[2px] rounded-full bg-primary" />
@@ -168,7 +168,7 @@ export default function Beranda() {
                 </p>
 
                 {/* Buttons */}
-                <div className="flex flex-wrap items-center gap-3 mt-7">
+                <div className="flex flex-col items-start sm:flex-row sm:items-center gap-3 mt-7">
 
                   {/* Lihat Produk */}
                   <Link

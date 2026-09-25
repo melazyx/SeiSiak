@@ -15,9 +15,9 @@ const WA_NUMBER = "6281270958582";
 
 const menu = [
   { to: "/", label: "Beranda" },
-  { to: "/kambing", label: "Kambing" },
-  { to: "/ayam", label: "Ayam" },
-  { to: "/maggot", label: "Maggot" },
+  { to: "/katalog", label: "Katalog" },
+  { to: "/titip-ternak", label: "Titip Ternak" },
+  { to: "/lacak-ternak", label: "Lacak Ternak" },
   { to: "/tentang", label: "Tentang Kami" },
 ];
 
